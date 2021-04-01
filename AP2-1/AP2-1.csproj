@@ -63,6 +63,14 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="FileUploadEventArgs.cs" />
+    <Compile Include="IModel.cs" />
+    <Compile Include="INotifyPropertyChanged.cs" />
+    <Compile Include="IView.cs" />
+    <Compile Include="IViewModel.cs" />
+    <Compile Include="Model.cs" />
+    <Compile Include="PropertyChangedEventArgs.cs" />
+    <Compile Include="ViewModel.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
