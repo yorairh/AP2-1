@@ -35,10 +35,17 @@ namespace AP2_1
                 String path = fd.FileName;
                 if (path.EndsWith(".csv")) {
                     tbPath.Text = "Path to .csv file: " + fd.FileName;
+                    // btnUpload.Visibility = visible
+                    btnUpload.Visibility = Visibility.Visible;
                 } else { 
                     tbPath.Text = "The file you entered is not a .csv file. Please Enter a .csv file.";
                 }
             }
+        }
+
+        private void Upload_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }
