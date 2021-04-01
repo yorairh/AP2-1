@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Microsoft.Win32;
 
 namespace AP2_1
 {
@@ -23,6 +24,21 @@ namespace AP2_1
         public MainWindow()
         {
             InitializeComponent();
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog fd = new OpenFileDialog();
+            bool? result = fd.ShowDialog();
+            if (result == true)
+            {
+                String path = fd.FileName;
+                if (path.EndsWith(".csv")) {
+                    tbPath.Text = "Path to .csv file: " + fd.FileName;
+                } else { 
+                    tbPath.Text = "The file you entered is not a .csv file. Please Enter a .csv file.";
+                }
+            }
         }
     }
 }
