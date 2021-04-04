@@ -7,6 +7,7 @@ using System.IO;
 using System.Threading;
 using System.Net.Sockets;
 using System.Net;
+using System.ComponentModel;
 
 namespace AP2_1
 {
@@ -26,12 +27,12 @@ namespace AP2_1
             indexLock = new object();
         }
 
-        public static void SendFile(object parameter)
+        public void SendFile(object parameter)
         {
             FlightSimulatorModel arg = parameter as FlightSimulatorModel;
             if (arg == null)
             {
-                return;
+            return;
             }
             int currIndex;
             lock (arg.indexLock)
@@ -75,8 +76,9 @@ namespace AP2_1
             index = 0;
             pause = false;
             sendingSpeed = 1;
-            sendFile = new Thread(SendFile);
 
+
+            sendFile = new Thread(SendFile);
             sendFile.Start(this);
         }
 

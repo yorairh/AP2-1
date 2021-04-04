@@ -30,7 +30,7 @@
             <Button x:Name="btnPause" Grid.Column="2" Content="Pause" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0" Width="75" Click="BtnPause_Click"/>
             <Button x:Name="btnFastForward" Grid.Column="3" Content=">>" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0" Width="75" Click="BtnFastForward_Click"/>
             <Label Grid.Column="4" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0" FontSize="14">Play Speed:</Label>
-            <TextBox x:Name="tbSpeed" Grid.Column="5" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0" PreviewTextInput="NumberValidationTextBox" Text="1.0" MinWidth="20"/>
+            <TextBox x:Name="tbSpeed" Grid.Column="5" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0" Text="1.0" MinWidth="20"/>
             <TextBlock x:Name="tbTime" Grid.Column="6" HorizontalAlignment="Center" Margin="0,0,0,0" TextWrapping="Wrap" Text="00:00:00" VerticalAlignment="Center"/>
             <Slider Name="sldrTime" HorizontalAlignment="Stretch" Margin="0,15,0,0" Grid.Row="1" Grid.ColumnSpan="9" VerticalAlignment="Top" Minimum="0" ValueChanged="SldrTime_ValueChanged" />
 
