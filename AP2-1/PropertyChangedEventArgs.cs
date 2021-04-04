@@ -9,7 +9,8 @@ namespace AP2_1
     class PropertyChangedEventArgs : EventArgs
     {
         public enum InfoVal {
-            FileUpdated = 0,
+            FileUpdated,
+            TimeChanged,
         };
 
         private InfoVal info;

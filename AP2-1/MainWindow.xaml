@@ -11,10 +11,8 @@
         <TextBlock Name="tbPath" HorizontalAlignment="Left" Margin="10,35,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="auto" Text="Please enter a .csv file"/>
         <Button x:Name="btnUpload" Content="Upload" HorizontalAlignment="Left" Margin="10,56,0,0" VerticalAlignment="Top" Width="75" Click="Upload_Click" Visibility="Hidden"/>
         <TextBlock Name="tbSuccess" HorizontalAlignment="Left" Margin="10,81,0,0" TextWrapping="Wrap" VerticalAlignment="Top"/>
-        <Grid HorizontalAlignment="Left" Height="69" Margin="10,340,0,0" VerticalAlignment="Top" Width="772" Name="gridControl" Visibility="Hidden">
+        <Grid HorizontalAlignment="Left" Height="69" Margin="10,340,0,0" VerticalAlignment="Top" Width="772" Name="gridControl" Visibility="Visible">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="1*" />
-                <ColumnDefinition Width="1*" />
                 <ColumnDefinition Width="1*" />
                 <ColumnDefinition Width="1*" />
                 <ColumnDefinition Width="1*" />
@@ -27,16 +25,14 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
-            <Button Grid.Column="0" Content="Button" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0" Width="75"/>
-            <Button Grid.Column="1" Content="Button" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0" Width="75"/>
-            <Button Grid.Column="2" Content="Button" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0" Width="75"/>
-            <Button Grid.Column="3" Content="Button" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0" Width="75"/>
-            <Button Grid.Column="4" Content="Button" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0" Width="75"/>
-            <Button Grid.Column="5" Content="Button" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0" Width="75"/>
-            <Label Grid.Column="6" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0" FontSize="14">Play Speed:</Label>
-            <TextBox Grid.Column="7" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0" Text="1.0" MinWidth="20"/>
-            <TextBlock Grid.Column="8" HorizontalAlignment="Center" Margin="0,0,0,0" TextWrapping="Wrap" Text="00:00:00" VerticalAlignment="Center"/>
-            <Slider Name="sldrTime" HorizontalAlignment="Stretch" Margin="0,15,0,0" Grid.Row="1" Grid.ColumnSpan="9" VerticalAlignment="Top" Minimum="0" />
+            <Button x:Name="btnFastBackward" Grid.Column="0" Content="&lt;&lt;" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0" Width="75" Click="BtnFastBackward_Click"/>
+            <Button x:Name="btnPlay"  Grid.Column="1" Content="Play" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0" Width="75" Click="BtnPlay_Click"/>
+            <Button x:Name="btnPause" Grid.Column="2" Content="Pause" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0" Width="75" Click="BtnPause_Click"/>
+            <Button x:Name="btnFastForward" Grid.Column="3" Content=">>" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0" Width="75" Click="BtnFastForward_Click"/>
+            <Label Grid.Column="4" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0" FontSize="14">Play Speed:</Label>
+            <TextBox x:Name="tbSpeed" Grid.Column="5" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0" PreviewTextInput="NumberValidationTextBox" Text="1.0" MinWidth="20"/>
+            <TextBlock x:Name="tbTime" Grid.Column="6" HorizontalAlignment="Center" Margin="0,0,0,0" TextWrapping="Wrap" Text="00:00:00" VerticalAlignment="Center"/>
+            <Slider Name="sldrTime" HorizontalAlignment="Stretch" Margin="0,15,0,0" Grid.Row="1" Grid.ColumnSpan="9" VerticalAlignment="Top" Minimum="0" ValueChanged="SldrTime_ValueChanged" />
 
         </Grid>
 

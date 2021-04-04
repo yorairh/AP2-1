@@ -25,6 +25,14 @@ namespace AP2_1
                         notifyPropertyChanged(this, args);
                     }
                 }
+                if (e as TimeChangedEventArgs != null)
+                {
+                    TimeChangedEventArgs args = e as TimeChangedEventArgs;
+                    if (args.Info == PropertyChangedEventArgs.InfoVal.TimeChanged)
+                    {
+                        notifyPropertyChanged(this, args);
+                    }
+                }
                 // more....
             };
         }
@@ -34,5 +42,19 @@ namespace AP2_1
             model.UploadFile(path);
         }
 
+        public void SetPause(bool pause)
+        {
+            model.SetPause(pause);
+        }
+
+        public void Jump(int val)
+        {
+            model.Jump(val);
+        }
+
+        public void SetTime(int time)
+        {
+            model.SetTime(time);
+        }
     }
 }

@@ -14,6 +14,8 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Microsoft.Win32;
 using System.IO;
+using System.Text.RegularExpressions;
+
 
 namespace AP2_1
 {
@@ -39,6 +41,18 @@ namespace AP2_1
                         tbSuccess.Text = "File uploaded successfully";
                         sldrTime.Maximum = args.Length;
                         gridControl.Visibility = Visibility.Visible;
+                    }
+                }
+                if (e as TimeChangedEventArgs != null)
+                {
+                    TimeChangedEventArgs args = e as TimeChangedEventArgs;
+                    if (args.Info == PropertyChangedEventArgs.InfoVal.TimeChanged)
+                    {
+                        this.Dispatcher.Invoke(() =>
+                        {
+                            sldrTime.Value = args.Seconds;
+                            tbTime.Text = args.NewTime;
+                        });
                     }
                 }
                 // more....
@@ -69,7 +83,31 @@ namespace AP2_1
         {
             // upload the file
             vm.UploadFile(pathToFile);
-            // fileData = File.ReadAllLines(pathToFile);
+        }
+
+        private void BtnPlay_Click(object sender, RoutedEventArgs e)
+        {
+            vm.SetPause(false);
+        }
+
+        private void BtnPause_Click(object sender, RoutedEventArgs e)
+        {
+            vm.SetPause(true);
+        }
+        
+        private void BtnFastBackward_Click(object sender, RoutedEventArgs e)
+        {
+            vm.Jump(-50);
+        }
+
+        private void BtnFastForward_Click(object sender, RoutedEventArgs e)
+        {
+            vm.Jump(50);
+        }
+
+        private void SldrTime_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            vm.SetTime((int) e.NewValue);
         }
     }
 }
