@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace AP2_1
 {
-    class ViewModel : IViewModel
+    class FlightSimulatorViewModel : IViewModel
     {
         private IModel model;
         
         public event propertyChanged notifyPropertyChanged;
 
-        public ViewModel(IModel model)
+        public FlightSimulatorViewModel(IModel model)
         {
             this.model = model;
 

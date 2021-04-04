@@ -7,7 +7,7 @@ using System.IO;
 
 namespace AP2_1
 {
-    class Model : IModel
+    class FlightSimulatorModel : IModel
     {
 
         private string[] fileData;

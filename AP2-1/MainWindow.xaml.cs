@@ -28,7 +28,7 @@ namespace AP2_1
         public MainWindow()
         {
             InitializeComponent();
-            vm = new ViewModel(new Model());
+            vm = new FlightSimulatorViewModel(new FlightSimulatorModel());
 
             vm.notifyPropertyChanged += (object sender, EventArgs e) => {
                 if (e as FileUploadEventArgs != null)
