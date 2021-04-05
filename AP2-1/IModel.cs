@@ -14,5 +14,6 @@ namespace AP2_1
         void UploadFile(string PathToFile);
         void Jump(int val);
         void SetTime(int time);
+        void SetSpeed(double speed);
     }
 }

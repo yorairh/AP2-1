@@ -56,5 +56,10 @@ namespace AP2_1
         {
             model.SetTime(time);
         }
+
+        public void SetSpeed(double speed)
+        {
+            model.SetSpeed(speed);
+        }
     }
 }

@@ -30,10 +30,12 @@
             <Button x:Name="btnPause" Grid.Column="2" Content="Pause" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0" Width="75" Click="BtnPause_Click"/>
             <Button x:Name="btnFastForward" Grid.Column="3" Content=">>" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0" Width="75" Click="BtnFastForward_Click"/>
             <Label Grid.Column="4" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0" FontSize="14">Play Speed:</Label>
-            <TextBox x:Name="tbSpeed" Grid.Column="5" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0" Text="1.0" MinWidth="20"/>
+            <Button x:Name="btnMinus" Content="-" Grid.Column="5" HorizontalAlignment="Left" Margin="5,5,0,0" VerticalAlignment="Top" Click="BtnMinus_Click" Width="20"/>
+            <TextBox x:Name="tbSpeed" Text="1.0" Grid.Column="5" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="30,5,55,0" MinWidth="20" Height="20" Width="25"/>
+            <Button x:Name="btnPlus" Content="+" Grid.Column="5" HorizontalAlignment="Left" Margin="60,5,0,0" VerticalAlignment="Top" Width="20" Click="BtnPlus_Click"/>
+            <Button Name="btnSpeed" Content="OK" Grid.Column="5" HorizontalAlignment="Left" Margin="85,5,0,0" VerticalAlignment="Top" Width="20" Click="BtnSpeed_Click"/>
             <TextBlock x:Name="tbTime" Grid.Column="6" HorizontalAlignment="Center" Margin="0,0,0,0" TextWrapping="Wrap" Text="00:00:00" VerticalAlignment="Center"/>
-            <Slider Name="sldrTime" HorizontalAlignment="Stretch" Margin="0,15,0,0" Grid.Row="1" Grid.ColumnSpan="9" VerticalAlignment="Top" Minimum="0" ValueChanged="SldrTime_ValueChanged" />
-
+            <Slider Name="sldrTime" HorizontalAlignment="Stretch" Margin="0,15,0,0" Grid.Row="1" Grid.ColumnSpan="9" VerticalAlignment="Top" Minimum="0" ValueChanged="SldrTime_ValueChanged"/>
         </Grid>
 
     </Grid>

@@ -130,5 +130,10 @@ namespace AP2_1
                 notifyPropertyChanged(this, new TimeChangedEventArgs(PropertyChangedEventArgs.InfoVal.TimeChanged, newTime, index));
             }
         }
+
+        public void SetSpeed(double speed)
+        {
+            sendingSpeed = speed;
+        }
     }
 }

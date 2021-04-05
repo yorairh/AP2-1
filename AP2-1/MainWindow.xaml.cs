@@ -3,6 +3,8 @@ using System.Windows;
 using Microsoft.Win32;
 using System.Windows.Threading;
 using System.Threading;
+using System.Text.RegularExpressions;
+using System.Windows.Input;
 
 namespace AP2_1
 {
@@ -95,5 +97,81 @@ namespace AP2_1
         {
             vm.SetTime((int) e.NewValue);
         }
-    }
+
+        private void BtnSpeed_Click(object sender, RoutedEventArgs e)
+        {
+            if (!double.TryParse(tbSpeed.Text, out double speed) || speed > 10 || speed <= 0)
+            {
+                tbSpeed.Text = "1.0";
+            }
+            else
+            {
+                if (vm != null)
+                {
+                    tbSpeed.Text = Math.Round(speed, 1, MidpointRounding.AwayFromZero).ToString();
+                    vm.SetSpeed(Math.Round(speed, 1, MidpointRounding.AwayFromZero));
+                }
+            }
+        }
+
+        private void BtnPlus_Click(object sender, RoutedEventArgs e)
+        {
+            if (!double.TryParse(tbSpeed.Text, out double speed))
+            {
+                tbSpeed.Text = "1.0";
+            }
+            else
+            {
+                if (speed - Math.Round(speed, 1, MidpointRounding.AwayFromZero) < 0.05 && speed - Math.Round(speed, 1, MidpointRounding.AwayFromZero) != 0)
+                {
+                    if (Math.Round(speed, 1, MidpointRounding.AwayFromZero) < speed)
+                    {
+                        speed = Math.Round(speed + 0.1, 1, MidpointRounding.AwayFromZero);
+                    } 
+                    else
+                    {
+                        speed = Math.Round(speed, 1, MidpointRounding.AwayFromZero);
+                    }
+                } 
+                else
+                {
+                    speed = Math.Round(speed + 0.1, 1, MidpointRounding.AwayFromZero);
+                }
+                if (speed <= 10)
+                {
+                    tbSpeed.Text = speed.ToString();
+                }
+            }
+        }
+
+        private void BtnMinus_Click(object sender, RoutedEventArgs e)
+        {
+            if (!double.TryParse(tbSpeed.Text, out double speed))
+            {
+                tbSpeed.Text = "1.0";
+            }
+            else
+            {
+                if (speed - Math.Round(speed, 1, MidpointRounding.AwayFromZero) < 0.05 && speed - Math.Round(speed, 1, MidpointRounding.AwayFromZero) > 0)
+                {
+                    if (Math.Round(speed, 1, MidpointRounding.AwayFromZero) > speed)
+                    {
+                        speed = Math.Round(speed - 0.1, 1, MidpointRounding.AwayFromZero);
+                    }
+                    else
+                    {
+                        speed = Math.Round(speed, 1, MidpointRounding.AwayFromZero);
+                    }
+                }
+                else
+                {
+                    speed = Math.Round(speed - 0.1, 1, MidpointRounding.AwayFromZero);
+                }
+                if (speed > 0)
+                {
+                    tbSpeed.Text = speed.ToString();
+                }
+            }
+        }
+    }  
 }

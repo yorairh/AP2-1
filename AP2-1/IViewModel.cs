@@ -12,5 +12,6 @@ namespace AP2_1
         void SetPause(bool pause);
         void Jump(int len);
         void SetTime(int time);
+        void SetSpeed(double speed);
     }
 }
