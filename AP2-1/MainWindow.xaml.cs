@@ -19,6 +19,7 @@ namespace AP2_1
         public MainWindow()
         {
             InitializeComponent();
+
             vm = new FlightSimulatorViewModel(new FlightSimulatorModel());
 
             vm.notifyPropertyChanged += (object sender, EventArgs e) => {
@@ -172,6 +173,11 @@ namespace AP2_1
                     tbSpeed.Text = speed.ToString();
                 }
             }
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            vm.Exit();
         }
     }  
 }

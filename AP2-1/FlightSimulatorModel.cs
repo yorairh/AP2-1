@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using System.Threading;
+using System.Diagnostics;
 using System.Net.Sockets;
 using System.Net;
 using System.ComponentModel;
@@ -32,26 +33,34 @@ namespace AP2_1
             FlightSimulatorModel arg = parameter as FlightSimulatorModel;
             if (arg == null)
             {
-            return;
+                return;
             }
             int currIndex;
             lock (arg.indexLock)
             {
                 currIndex = arg.index;
             }
+            int workTime = 0;
+            DateTime start = DateTime.Now;
             while (currIndex < arg.fileData.Length)
             {
                 if (!arg.pause)
                 {
                     // send fileData[index]
-                    lock(arg.indexLock)
+                    lock (arg.indexLock)
                     {
+                        ++arg.index;
                         string newTime = TimeFormat(arg.index / 10);
                         arg.notifyPropertyChanged(arg, new TimeChangedEventArgs(PropertyChangedEventArgs.InfoVal.TimeChanged, newTime, arg.index));
-                        ++arg.index;
                     }
-                    Thread.Sleep((int) (100 / arg.sendingSpeed));
+                    workTime = (int)(DateTime.Now - start).TotalMilliseconds;
+                    if (workTime < 100)
+                    {
+                        Console.WriteLine(((int)(100 / arg.sendingSpeed) - workTime).ToString());
+                        Thread.Sleep((int)(100 / arg.sendingSpeed) - workTime);
+                    }
                 }
+                start = DateTime.Now;
                 lock (arg.indexLock)
                 {
                     currIndex = arg.index;
@@ -71,7 +80,7 @@ namespace AP2_1
             fileData = File.ReadAllLines(path);
             // notify uploaded
             notifyPropertyChanged(this, new FileUploadEventArgs(PropertyChangedEventArgs.InfoVal.FileUpdated, fileData.Length));
-            
+
             // create the thread uploading the file lines
             index = 0;
             pause = false;
@@ -91,8 +100,8 @@ namespace AP2_1
         {
             int h, m, s;
             h = seconds / 3600;
-            m = (seconds - (3600*h))/ 60;
-            s = seconds - 3600*h - m * 60;
+            m = (seconds - (3600 * h)) / 60;
+            s = seconds - 3600 * h - m * 60;
             string sh = h.ToString();
             string sm = m.ToString();
             string ss = s.ToString();
@@ -134,6 +143,11 @@ namespace AP2_1
         public void SetSpeed(double speed)
         {
             sendingSpeed = speed;
+        }
+
+        public void Exit()
+        {
+            sendFile.Abort();
         }
     }
 }

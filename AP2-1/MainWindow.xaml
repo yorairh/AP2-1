@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AP2_1"
         mc:Ignorable="d"
-        Title="Flight Simulator" Height="450" Width="800">
+        Title="Flight Simulator" Height="450" Width="800" Closing="Window_Closing">
     <Grid>
         <Button Content="Open File Explorer" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="auto" Click="Button_Click"/>
         <TextBlock Name="tbPath" HorizontalAlignment="Left" Margin="10,35,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="auto" Text="Please enter a .csv file"/>

@@ -61,5 +61,10 @@ namespace AP2_1
         {
             model.SetSpeed(speed);
         }
+
+        public void Exit()
+        {
+            model.Exit();
+        }
     }
 }
