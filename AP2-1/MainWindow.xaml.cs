@@ -17,11 +17,11 @@ namespace AP2_1
         IViewModel vm;
         private string pathToFile;
 
+        private static readonly double JOYSTICK_RATIO = 3; // Joystick size / JoystickHandleSize
         private void SetJoystick()
         {
-            double ratio = 2; // Joystick size / JoystickHandleSize
-            JoystickHandle.Height = Joystick.Height / ratio;
-            JoystickHandle.Width = Joystick.Width / ratio;
+            JoystickHandle.Height = Joystick.Height / JOYSTICK_RATIO;
+            JoystickHandle.Width = Joystick.Width / JOYSTICK_RATIO;
             Canvas.SetTop(JoystickHandle, Canvas.GetTop(Joystick) + (Joystick.Height - JoystickHandle.Height) / 2);
             Canvas.SetLeft(JoystickHandle, Canvas.GetLeft(Joystick) + (Joystick.Width - JoystickHandle.Width) / 2);
         }
@@ -60,10 +60,11 @@ namespace AP2_1
                     InformationChangedEventArgs args = e as InformationChangedEventArgs;
                     if (args.Info == PropertyChangedEventArgs.InfoVal.InfoChanged)
                     {
-                        this.Dispatcher.BeginInvoke(DispatcherPriority.Normal, (ThreadStart)delegate () {
-                            int left = (int)(Canvas.GetLeft(Joystick) + JoystickHandle.Width * (1 + args.Aileron) / 2);
+                        this.Dispatcher.BeginInvoke(DispatcherPriority.Normal, (ThreadStart) delegate () {
+                            // the last 2 in every formula can be changed to JOYSTICK_RATIO in order to get the sensitivity fit the size of the joystick
+                            int left = (int)(Canvas.GetLeft(Joystick) + (Joystick.Width - JoystickHandle.Width) / 2 + JoystickHandle.Width * (args.Aileron) / 2),
+                                top = (int)(Canvas.GetTop(Joystick) + (Joystick.Height - JoystickHandle.Height) / 2 + JoystickHandle.Height * (args.Elevator) / 2);
                             Canvas.SetLeft(JoystickHandle, left);
-                            int top = (int)(Canvas.GetTop(Joystick) + JoystickHandle.Height  * (1 + args.Elevator) / 2);
                             Canvas.SetTop(JoystickHandle, top);
                         });
                     }

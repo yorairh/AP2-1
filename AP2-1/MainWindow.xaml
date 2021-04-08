@@ -38,8 +38,16 @@
             <Slider Name="sldrTime" HorizontalAlignment="Stretch" Margin="0,15,0,0" Grid.Row="1" Grid.ColumnSpan="9" VerticalAlignment="Top" Minimum="0" Thumb.DragStarted="SldrTime_DragStarted" Thumb.DragCompleted="SldrTime_DragCompleted"/>
         </Grid>
         <Canvas Name="LayoutRoot">
-            <Ellipse Fill="#FFF4F4F5" x:Name ="Joystick" Height="120" Canvas.Left="564" Stroke="Black" Canvas.Top="74" Width="120" />
-            <Ellipse Fill="#FFF4F4F5" x:Name ="JoystickHandle" Stroke="Black" />
+            <Ellipse x:Name ="Joystick" Height="120" Canvas.Left="564" Stroke="Black" Canvas.Top="74" Width="120" >
+                <Ellipse.Fill>
+                    <VisualBrush>
+                        <VisualBrush.Visual>
+                            <Image Source="joystick.png"/>
+                        </VisualBrush.Visual>
+                    </VisualBrush>
+                </Ellipse.Fill>
+            </Ellipse>
+            <Ellipse x:Name ="JoystickHandle" Stroke="Gray" Fill="Gray"/>
         </Canvas>
 
     </Grid>
