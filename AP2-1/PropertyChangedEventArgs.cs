@@ -11,6 +11,7 @@ namespace AP2_1
         public enum InfoVal {
             FileUpdated,
             TimeChanged,
+            InfoChanged,
         };
 
         private InfoVal info;

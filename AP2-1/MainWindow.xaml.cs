@@ -5,6 +5,7 @@ using System.Windows.Threading;
 using System.Threading;
 using System.Text.RegularExpressions;
 using System.Windows.Input;
+using System.Windows.Controls;
 
 namespace AP2_1
 {
@@ -41,6 +42,20 @@ namespace AP2_1
                         this.Dispatcher.BeginInvoke(DispatcherPriority.Normal, (ThreadStart) delegate () {
                             sldrTime.Value = args.Seconds;
                             tbTime.Text = args.NewTime;
+                        });
+                    }
+                }
+                // ****
+                if (e as InformationChangedEventArgs != null)
+                {
+                    InformationChangedEventArgs args = e as InformationChangedEventArgs;
+                    if (args.Info == PropertyChangedEventArgs.InfoVal.InfoChanged)
+                    {
+                        this.Dispatcher.BeginInvoke(DispatcherPriority.Normal, (ThreadStart)delegate () {
+                            int left = 594 + (int)(JoystickHandle.Height * args.Aileron);
+                            Canvas.SetLeft(JoystickHandle, left);
+                            int top = 104 + (int)(JoystickHandle.Height * args.Elevator);
+                            Canvas.SetTop(JoystickHandle, top);
                         });
                     }
                 }

@@ -33,6 +33,15 @@ namespace AP2_1
                         notifyPropertyChanged(this, args);
                     }
                 }
+                // ****
+                if (e as InformationChangedEventArgs != null)
+                {
+                    InformationChangedEventArgs args = e as InformationChangedEventArgs;
+                    if (args.Info == PropertyChangedEventArgs.InfoVal.InfoChanged)
+                    {
+                        notifyPropertyChanged(this, args);
+                    }
+                }
                 // more....
             };
         }
