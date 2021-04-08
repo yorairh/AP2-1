@@ -39,7 +39,7 @@
         </Grid>
         <Canvas Name="LayoutRoot">
             <Ellipse Fill="#FFF4F4F5" x:Name ="Joystick" Height="120" Canvas.Left="564" Stroke="Black" Canvas.Top="74" Width="120" />
-            <Ellipse Fill="#FFF4F4F5" x:Name ="JoystickHandle" Height="60" Canvas.Left="594" Stroke="Black" Canvas.Top="104" Width="60"/>
+            <Ellipse Fill="#FFF4F4F5" x:Name ="JoystickHandle" Stroke="Black" />
         </Canvas>
 
     </Grid>

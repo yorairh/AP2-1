@@ -17,9 +17,19 @@ namespace AP2_1
         IViewModel vm;
         private string pathToFile;
 
+        private void SetJoystick()
+        {
+            double ratio = 2; // Joystick size / JoystickHandleSize
+            JoystickHandle.Height = Joystick.Height / ratio;
+            JoystickHandle.Width = Joystick.Width / ratio;
+            Canvas.SetTop(JoystickHandle, Canvas.GetTop(Joystick) + (Joystick.Height - JoystickHandle.Height) / 2);
+            Canvas.SetLeft(JoystickHandle, Canvas.GetLeft(Joystick) + (Joystick.Width - JoystickHandle.Width) / 2);
+        }
+
         public MainWindow()
         {
             InitializeComponent();
+            SetJoystick();
 
             vm = new FlightSimulatorViewModel(new FlightSimulatorModel());
 
@@ -45,16 +55,15 @@ namespace AP2_1
                         });
                     }
                 }
-                // ****
                 if (e as InformationChangedEventArgs != null)
                 {
                     InformationChangedEventArgs args = e as InformationChangedEventArgs;
                     if (args.Info == PropertyChangedEventArgs.InfoVal.InfoChanged)
                     {
                         this.Dispatcher.BeginInvoke(DispatcherPriority.Normal, (ThreadStart)delegate () {
-                            int left = 594 + (int)(JoystickHandle.Height * args.Aileron);
+                            int left = (int)(Canvas.GetLeft(Joystick) + JoystickHandle.Width * (1 + args.Aileron) / 2);
                             Canvas.SetLeft(JoystickHandle, left);
-                            int top = 104 + (int)(JoystickHandle.Height * args.Elevator);
+                            int top = (int)(Canvas.GetTop(Joystick) + JoystickHandle.Height  * (1 + args.Elevator) / 2);
                             Canvas.SetTop(JoystickHandle, top);
                         });
                     }

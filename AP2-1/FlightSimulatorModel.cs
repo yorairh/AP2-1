@@ -15,7 +15,7 @@ namespace AP2_1
 {
     class FlightSimulatorModel : IModel
     {
-        private Thread sendFile;
+        private Thread sendFileThread;
         private string[] fileData;
         private double sendingSpeed;
         private volatile int index;
@@ -70,10 +70,10 @@ namespace AP2_1
 
         public void UploadFile(string path)
         {
-            if (sendFile != null)
+            if (sendFileThread != null)
             {
-                sendFile.Abort();
-                sendFile = null;
+                sendFileThread.Abort();
+                sendFileThread = null;
             }
 
             // upload the file
@@ -86,8 +86,8 @@ namespace AP2_1
             pause = false;
             sendingSpeed = 1;
 
-            sendFile = new Thread(SendFile);
-            sendFile.Start(this);
+            sendFileThread = new Thread(SendFile);
+            sendFileThread.Start(this);
         }
 
         public void SetPause(bool pause)
@@ -97,26 +97,9 @@ namespace AP2_1
 
         private static string TimeFormat(int seconds)
         {
-            int h, m, s;
-            h = seconds / 3600;
-            m = (seconds - (3600 * h)) / 60;
-            s = seconds - 3600 * h - m * 60;
-            string sh = h.ToString();
-            string sm = m.ToString();
-            string ss = s.ToString();
-            if (h < 10)
-            {
-                sh = "0" + sh;
-            }
-            if (m < 10)
-            {
-                sm = "0" + sm;
-            }
-            if (s < 10)
-            {
-                ss = "0" + ss;
-            }
-            return sh + ":" + sm + ":" + ss;
+            int h = seconds / 3600, m = (seconds - 3600 * h) / 60, s = seconds - 3600 * h - m * 60;
+            DateTime dt = new DateTime(1, 1, 1, h, m, s); // the date doesn't matter
+            return dt.ToString("HH:mm:ss");
         }
 
         public void Jump(int val)
@@ -146,7 +129,10 @@ namespace AP2_1
 
         public void Exit()
         {
-            sendFile.Abort();
+            if (sendFileThread != null && sendFileThread.IsAlive)
+            {
+                sendFileThread.Abort();
+            }
         }
     }
 }
