@@ -109,9 +109,28 @@ namespace AP2_1
             vm.Jump(50);
         }
 
+        private bool dragStarted = false;
+
+        private void SldrTime_DragStarted(object sender, System.Windows.Controls.Primitives.DragStartedEventArgs e)
+        {
+            dragStarted = true;
+        }
+
         private void SldrTime_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            vm.SetTime((int) e.NewValue);
+            if (!dragStarted)
+            {
+                vm.SetTime((int)e.NewValue);
+            }
+        }
+
+        private void SldrTime_DragCompleted(object sender, System.Windows.Controls.Primitives.DragCompletedEventArgs e)
+        {
+            vm.SetPause(true);
+            int val = (int) ((Slider)sender).Value;
+            vm.SetTime(val);
+            dragStarted = false;
+            vm.SetPause(false);
         }
 
         private void BtnSpeed_Click(object sender, RoutedEventArgs e)

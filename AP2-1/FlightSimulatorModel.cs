@@ -21,11 +21,6 @@ namespace AP2_1
         private volatile int index;
         private volatile bool pause;
         private object indexLock;
-        // ****
-        /*private float indexAileron;
-        private float indexElevator;
-        private float indexRudder;
-        private float indexThrottle;*/
 
         public event propertyChanged notifyPropertyChanged;
 
@@ -46,8 +41,6 @@ namespace AP2_1
             {
                 currIndex = arg.index;
             }
-            int workTime = 0;
-            DateTime start = DateTime.Now;
             while (currIndex < arg.fileData.Length)
             {
                 if (!arg.pause)
@@ -57,25 +50,17 @@ namespace AP2_1
                     lock (arg.indexLock)
                     {
                         ++arg.index;
-                        // ****
-                        string line = fileData[currIndex];
-                        string[] floats = line.Split(',');
-                        float aileron = float.Parse(floats[0], CultureInfo.InvariantCulture.NumberFormat);
-                        float elevator = float.Parse(floats[1], CultureInfo.InvariantCulture.NumberFormat);
-                        float rudder = float.Parse(floats[2], CultureInfo.InvariantCulture.NumberFormat);
-                        float throttle = float.Parse(floats[6], CultureInfo.InvariantCulture.NumberFormat);
+                        string[] currData = fileData[currIndex].Split(',');
+                        float aileron = float.Parse(currData[0], CultureInfo.InvariantCulture.NumberFormat);
+                        float elevator = float.Parse(currData[1], CultureInfo.InvariantCulture.NumberFormat);
+                        float rudder = float.Parse(currData[2], CultureInfo.InvariantCulture.NumberFormat);
+                        float throttle = float.Parse(currData[6], CultureInfo.InvariantCulture.NumberFormat);
                         arg.notifyPropertyChanged(arg, new InformationChangedEventArgs(PropertyChangedEventArgs.InfoVal.InfoChanged, aileron, elevator, rudder, throttle));
                         string newTime = TimeFormat(arg.index / 10);
                         arg.notifyPropertyChanged(arg, new TimeChangedEventArgs(PropertyChangedEventArgs.InfoVal.TimeChanged, newTime, arg.index));
                     }
-                    workTime = (int)(DateTime.Now - start).TotalMilliseconds;
-                    if (workTime < 100)
-                    {
-                        Console.WriteLine(((int)(100 / arg.sendingSpeed) - workTime).ToString());
-                        Thread.Sleep((int)(100 / arg.sendingSpeed) - workTime);
-                    }
+                    Thread.Sleep((int)(100 / arg.sendingSpeed));
                 }
-                start = DateTime.Now;
                 lock (arg.indexLock)
                 {
                     currIndex = arg.index;
@@ -100,11 +85,6 @@ namespace AP2_1
             index = 0;
             pause = false;
             sendingSpeed = 1;
-            // ****
-/*            indexAileron = 0;
-            indexElevator = 0;
-            indexRudder = 0;
-            indexThrottle = 0;*/
 
             sendFile = new Thread(SendFile);
             sendFile.Start(this);

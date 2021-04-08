@@ -35,10 +35,10 @@
             <Button x:Name="btnPlus" Content="+" Grid.Column="5" HorizontalAlignment="Left" Margin="60,5,0,0" VerticalAlignment="Top" Width="20" Click="BtnPlus_Click"/>
             <Button Name="btnSpeed" Content="OK" Grid.Column="5" HorizontalAlignment="Left" Margin="85,5,0,0" VerticalAlignment="Top" Width="20" Click="BtnSpeed_Click"/>
             <TextBlock x:Name="tbTime" Grid.Column="6" HorizontalAlignment="Center" Margin="0,0,0,0" TextWrapping="Wrap" Text="00:00:00" VerticalAlignment="Center"/>
-            <Slider Name="sldrTime" HorizontalAlignment="Stretch" Margin="0,15,0,0" Grid.Row="1" Grid.ColumnSpan="9" VerticalAlignment="Top" Minimum="0" ValueChanged="SldrTime_ValueChanged"/>
+            <Slider Name="sldrTime" HorizontalAlignment="Stretch" Margin="0,15,0,0" Grid.Row="1" Grid.ColumnSpan="9" VerticalAlignment="Top" Minimum="0" Thumb.DragStarted="SldrTime_DragStarted" ValueChanged="SldrTime_ValueChanged" Thumb.DragCompleted="SldrTime_DragCompleted"/>
         </Grid>
-        <Canvas Name="LayoutRoot" Grid.Column="1">
-            <Ellipse Fill="#FFF4F4F5" x:Name ="Joystick" Height="120" Canvas.Left="564" Stroke="Black" Canvas.Top="74" Width="120"/>
+        <Canvas Name="LayoutRoot">
+            <Ellipse Fill="#FFF4F4F5" x:Name ="Joystick" Height="120" Canvas.Left="564" Stroke="Black" Canvas.Top="74" Width="120" />
             <Ellipse Fill="#FFF4F4F5" x:Name ="JoystickHandle" Height="60" Canvas.Left="594" Stroke="Black" Canvas.Top="104" Width="60"/>
         </Canvas>
 
