@@ -107,23 +107,13 @@ namespace AP2_1
                     tbPath.Text = "Path to .csv file: " + pathToFile;
                     btnUpload.Visibility = Visibility.Visible;
                     gridControl.Visibility = Visibility.Visible;
-                    Joystick.Visibility = Visibility.Visible;
-                    JoystickHandle.Visibility = Visibility.Visible;
-                    ThrottleLayout.Visibility = Visibility.Visible;
-                    RudderLayout.Visibility = Visibility.Visible;
-                    ThrottleTracker.Visibility = Visibility.Visible;
-                    RudderTracker.Visibility = Visibility.Visible;
+                    LayoutInfo.Visibility = Visibility.Visible;
                 } else { 
                     tbPath.Text = "The file you entered is not a .csv file. Please Enter a .csv file.";
                     tbSuccess.Text = "";
                     btnUpload.Visibility = Visibility.Hidden;
                     gridControl.Visibility = Visibility.Hidden;
-                    Joystick.Visibility = Visibility.Hidden;
-                    JoystickHandle.Visibility = Visibility.Hidden;
-                    ThrottleLayout.Visibility = Visibility.Hidden;
-                    RudderLayout.Visibility = Visibility.Hidden;
-                    ThrottleTracker.Visibility = Visibility.Hidden;
-                    RudderTracker.Visibility = Visibility.Hidden;
+                    LayoutInfo.Visibility = Visibility.Hidden;
                 }
             }
         }

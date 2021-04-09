@@ -59,13 +59,103 @@ namespace AP2_1
                 throttle = value;
             }
         }
+        
+        private float altimeter;
 
-        public InformationChangedEventArgs(InfoVal info, float aileron, float elevator, float rudder, float throttle) : base(info)
+        public float Altimeter
         {
-            this.aileron = aileron;
-            this.elevator = elevator;
-            this.rudder = rudder;
-            this.throttle = throttle;
+            get
+            {
+                return this.altimeter;
+            }
+            set
+            {
+                altimeter = value;
+            }
+        }
+
+        private float airSpeed;
+
+        public float AirSpeed
+        {
+            get
+            {
+                return this.airSpeed;
+            }
+            set
+            {
+                airSpeed = value;
+            }
+        }
+
+        private float orientation;
+
+        public float Orientation
+        {
+            get
+            {
+                return this.orientation;
+            }
+            set
+            {
+                orientation = value;
+            }
+        }
+
+        private float roll;
+
+        public float Roll
+        {
+            get
+            {
+                return this.roll;
+            }
+            set
+            {
+                roll = value;
+            }
+        }
+
+        private float pitch;
+
+        public float Pitch
+        {
+            get
+            {
+                return this.pitch;
+            }
+            set
+            {
+                pitch = value;
+            }
+        }
+
+        private float yaw;
+
+        public float Yaw
+        {
+            get
+            {
+                return this.yaw;
+            }
+            set
+            {
+                yaw = value;
+            }
+        }
+
+        public InformationChangedEventArgs(InfoVal info, float[] stats) : base(info)
+        {
+            this.aileron = stats[0];
+            this.elevator = stats[1];
+            this.rudder = stats[2];
+            this.throttle = stats[3];
+            this.altimeter = stats[4];
+            this.airSpeed = stats[5];
+            this.orientation = stats[6];
+            this.roll = stats[7];
+            this.pitch = stats[8];
+            this.yaw = stats[9];
         }
     }
 }

@@ -55,7 +55,14 @@ namespace AP2_1
                         float elevator = float.Parse(currData[1], CultureInfo.InvariantCulture.NumberFormat);
                         float rudder = float.Parse(currData[2], CultureInfo.InvariantCulture.NumberFormat);
                         float throttle = float.Parse(currData[6], CultureInfo.InvariantCulture.NumberFormat);
-                        arg.notifyPropertyChanged(arg, new InformationChangedEventArgs(PropertyChangedEventArgs.InfoVal.InfoChanged, aileron, elevator, rudder, throttle));
+                        float altimeter = float.Parse(currData[25], CultureInfo.InvariantCulture.NumberFormat);
+                        float airSpeed = float.Parse(currData[21], CultureInfo.InvariantCulture.NumberFormat);
+                        float orientation = float.Parse(currData[19], CultureInfo.InvariantCulture.NumberFormat);
+                        float roll = float.Parse(currData[17], CultureInfo.InvariantCulture.NumberFormat);
+                        float pitch = float.Parse(currData[18], CultureInfo.InvariantCulture.NumberFormat);
+                        float yaw = float.Parse(currData[20], CultureInfo.InvariantCulture.NumberFormat);
+                        float[] info = { aileron, elevator, rudder, throttle, altimeter, airSpeed, orientation, roll, pitch, yaw};
+                        arg.notifyPropertyChanged(arg, new InformationChangedEventArgs(PropertyChangedEventArgs.InfoVal.InfoChanged, info));
                         string newTime = TimeFormat(arg.index / 10);
                         arg.notifyPropertyChanged(arg, new TimeChangedEventArgs(PropertyChangedEventArgs.InfoVal.TimeChanged, newTime, arg.index));
                     }
