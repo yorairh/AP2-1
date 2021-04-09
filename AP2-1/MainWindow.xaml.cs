@@ -22,14 +22,32 @@ namespace AP2_1
         {
             JoystickHandle.Height = Joystick.Height / JOYSTICK_RATIO;
             JoystickHandle.Width = Joystick.Width / JOYSTICK_RATIO;
-            Canvas.SetTop(JoystickHandle, Canvas.GetTop(Joystick) + (Joystick.Height - JoystickHandle.Height) / 2);
-            Canvas.SetLeft(JoystickHandle, Canvas.GetLeft(Joystick) + (Joystick.Width - JoystickHandle.Width) / 2);
+            Canvas.SetTop(JoystickHandle, Canvas.GetTop(Joystick) + (Joystick.Height) / JOYSTICK_RATIO);
+            Canvas.SetLeft(JoystickHandle, Canvas.GetLeft(Joystick) + (Joystick.Width) / JOYSTICK_RATIO);
+        }
+
+        private void SetRudder()
+        {
+            RudderTracker.Height = RudderLayout.Height + 4;
+            RudderTracker.Width = RudderLayout.Height + 4;
+            Canvas.SetTop(RudderTracker, Canvas.GetTop(RudderLayout) - 2);
+            Canvas.SetLeft(RudderTracker, Canvas.GetLeft(RudderLayout) + RudderLayout.Width / 2 - RudderTracker.Width / 2);
+        }
+
+        private void SetThrottle()
+        {
+            ThrottleTracker.Height = ThrottleLayout.Width + 4;
+            ThrottleTracker.Width = ThrottleLayout.Width + 4;
+            Canvas.SetTop(ThrottleTracker, Canvas.GetTop(ThrottleLayout) + ThrottleLayout.Height / 2 - ThrottleTracker.Height / 2);
+            Canvas.SetLeft(ThrottleTracker, Canvas.GetLeft(ThrottleLayout) - 2);
         }
 
         public MainWindow()
         {
             InitializeComponent();
             SetJoystick();
+            SetRudder();
+            SetThrottle();
 
             vm = new FlightSimulatorViewModel(new FlightSimulatorModel());
 
@@ -62,10 +80,14 @@ namespace AP2_1
                     {
                         this.Dispatcher.BeginInvoke(DispatcherPriority.Normal, (ThreadStart) delegate () {
                             // the last 2 in every formula can be changed to JOYSTICK_RATIO in order to get the sensitivity fit the size of the joystick
-                            int left = (int)(Canvas.GetLeft(Joystick) + (Joystick.Width - JoystickHandle.Width) / 2 + JoystickHandle.Width * (args.Aileron) / 2),
-                                top = (int)(Canvas.GetTop(Joystick) + (Joystick.Height - JoystickHandle.Height) / 2 + JoystickHandle.Height * (args.Elevator) / 2);
-                            Canvas.SetLeft(JoystickHandle, left);
-                            Canvas.SetTop(JoystickHandle, top);
+                            int leftJoystick = (int)(Canvas.GetLeft(Joystick) + (Joystick.Width - JoystickHandle.Width) / 2 + (Joystick.Width - JoystickHandle.Width) * (args.Aileron) / 2),
+                                topJoystick = (int)(Canvas.GetTop(Joystick) + (Joystick.Height - JoystickHandle.Height) / 2 + (Joystick.Height - JoystickHandle.Height) * (args.Elevator) / 2);
+                            Canvas.SetLeft(JoystickHandle, leftJoystick);
+                            Canvas.SetTop(JoystickHandle, topJoystick);
+                            int leftRudder = (int)(Canvas.GetLeft(RudderLayout) + (RudderLayout.Width - RudderTracker.Width) / 2 + (RudderLayout.Width - RudderTracker.Width) * (args.Rudder) / 2);
+                            Canvas.SetLeft(RudderTracker, leftRudder);
+                            int topThrottle = (int)(Canvas.GetTop(ThrottleLayout) + (ThrottleLayout.Height - ThrottleTracker.Height) / 2 - (ThrottleLayout.Height - ThrottleTracker.Height) * (args.Throttle) / 2);
+                            Canvas.SetTop(ThrottleTracker, topThrottle);
                         });
                     }
                 }
@@ -73,7 +95,7 @@ namespace AP2_1
             };
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void Explore_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog fd = new OpenFileDialog();
             bool? result = fd.ShowDialog();
@@ -84,11 +106,24 @@ namespace AP2_1
                     pathToFile = fd.FileName;
                     tbPath.Text = "Path to .csv file: " + pathToFile;
                     btnUpload.Visibility = Visibility.Visible;
+                    gridControl.Visibility = Visibility.Visible;
+                    Joystick.Visibility = Visibility.Visible;
+                    JoystickHandle.Visibility = Visibility.Visible;
+                    ThrottleLayout.Visibility = Visibility.Visible;
+                    RudderLayout.Visibility = Visibility.Visible;
+                    ThrottleTracker.Visibility = Visibility.Visible;
+                    RudderTracker.Visibility = Visibility.Visible;
                 } else { 
                     tbPath.Text = "The file you entered is not a .csv file. Please Enter a .csv file.";
                     tbSuccess.Text = "";
                     btnUpload.Visibility = Visibility.Hidden;
                     gridControl.Visibility = Visibility.Hidden;
+                    Joystick.Visibility = Visibility.Hidden;
+                    JoystickHandle.Visibility = Visibility.Hidden;
+                    ThrottleLayout.Visibility = Visibility.Hidden;
+                    RudderLayout.Visibility = Visibility.Hidden;
+                    ThrottleTracker.Visibility = Visibility.Hidden;
+                    RudderTracker.Visibility = Visibility.Hidden;
                 }
             }
         }
