@@ -88,6 +88,31 @@ namespace AP2_1
                             Canvas.SetLeft(RudderTracker, leftRudder);
                             int topThrottle = (int)(Canvas.GetTop(ThrottleLayout) + (ThrottleLayout.Height - ThrottleTracker.Height) / 2 - (ThrottleLayout.Height - ThrottleTracker.Height) * (args.Throttle) / 2);
                             Canvas.SetTop(ThrottleTracker, topThrottle);
+                            tbHeight.Text = args.Altimeter.ToString();
+                            if (args.Roll < 0.0)
+                            {
+                                recRoll.Height = (int)((360 - args.Roll) / 3);
+                            } else
+                            {
+                                recRoll.Height = (int)(args.Roll / 3);
+                            }
+                            if (args.Pitch < 0.0)
+                            {
+                                recPitch.Height = (int)((360 - args.Pitch) / 3);
+                            }
+                            else
+                            {
+                                recPitch.Height = (int)(args.Pitch / 3);
+                            }
+                            if (args.Yaw < 0.0)
+                            {
+                                recYaw.Height = (int)((360 - args.Yaw) / 3);
+                            }
+                            else
+                            {
+                                recYaw.Height = (int)(args.Yaw / 3);
+                            }
+                            
                         });
                     }
                 }
