@@ -295,5 +295,14 @@ namespace AP2_1
         {
             vm.Exit();
         }
+
+        private void propertyMenu_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender as MenuItem != null)
+            {
+                MenuItem chosenItem = sender as MenuItem;
+                vm.SetCurrentCategory(chosenItem.Header.ToString());
+            }
+        }
     }  
 }

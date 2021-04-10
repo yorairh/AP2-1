@@ -23,6 +23,7 @@ namespace AP2_1
         private volatile int index;
         private volatile bool pause;
         private object indexLock;
+        private string currentCategory;
 
         public event propertyChanged notifyPropertyChanged;
 
@@ -113,6 +114,22 @@ namespace AP2_1
             sendFileThread.Start(this);
         }
 
+        private List<string> GetRelevantData()
+        {
+            int currIndex;
+            lock (indexLock)
+            {
+                currIndex = index;
+            }
+            int firstIndex = (currIndex - 30 < 0 ? 0 : currIndex - 30);
+            List<string> relData = new List<string>();
+            for (int i = firstIndex; i < currIndex; ++i)
+            {
+                relData.Add(fileData[i].Split(',')[categories.IndexOf(currentCategory)]);
+            }
+            return relData;
+        }
+
         public void SetPause(bool pause)
         {
             this.pause = pause;
@@ -148,6 +165,11 @@ namespace AP2_1
         public void SetSpeed(double speed)
         {
             sendingSpeed = speed;
+        }
+
+        public void SetCurrentCategory(string category)
+        {
+            this.currentCategory = category;
         }
 
         public void Exit()

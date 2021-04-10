@@ -78,6 +78,11 @@ namespace AP2_1
             model.SetSpeed(speed);
         }
 
+        public void SetCurrentCategory(string category)
+        {
+            model.SetCurrentCategory(category);
+        }
+
         public void Exit()
         {
             model.Exit();

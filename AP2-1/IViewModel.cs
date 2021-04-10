@@ -13,6 +13,7 @@ namespace AP2_1
         void Jump(int len);
         void SetTime(int time);
         void SetSpeed(double speed);
+        void SetCurrentCategory(string category);
         void Exit();
     }
 }
