@@ -32,6 +32,7 @@ namespace AP2_1
         public FlightSimulatorModel()
         {
             indexLock = new object();
+            
         }
 
         public void SendFile(object parameter)
@@ -92,6 +93,7 @@ namespace AP2_1
             fileData = File.ReadAllLines(pathCSV);
             //upload the XML file
             categories = new List<string>();
+            
             XmlDocument doc = new XmlDocument();
             doc.Load(pathXML);
             XmlNode input = doc.GetElementsByTagName("input").Item(0);
@@ -103,7 +105,8 @@ namespace AP2_1
                         categories.Add(item.InnerText);
                 }
             }
-
+            minValues = new List<int>(categories.Count);
+            maxValues = new List<int>(categories.Count);
             for (int i = 0; i < fileData.Length; ++i)
             {
                 List<int> max = new List<int>(categories.Count), min = new List<int>(categories.Count);
@@ -111,8 +114,8 @@ namespace AP2_1
                 for (int j = 0; j < curr.Length; ++j)
                 {
                     float val = float.Parse(curr[j], CultureInfo.InvariantCulture.NumberFormat);
-                    if (val < minValues.ElementAt(j)) minValues.Insert(j, (int) val);
-                    if (val > maxValues.ElementAt(j)) maxValues.Insert(j, (int) val);
+                    if (i == 0 || val < minValues.ElementAt(j)) minValues.Insert(j, (int) val);
+                    if (i == 0 || val > maxValues.ElementAt(j)) maxValues.Insert(j, (int) val);
                 }
             }
 
@@ -140,7 +143,7 @@ namespace AP2_1
             List<float> relData = new List<float>();
             for (int i = firstIndex; i < currIndex; ++i)
             {
-                relData.Add(float.Parse(fileData[i].Split(',')[categories.IndexOf(currentCategory)], CultureInfo.InvariantCulture.NumberFormat););
+                relData.Add(float.Parse(fileData[i].Split(',')[categories.IndexOf(currentCategory)], CultureInfo.InvariantCulture.NumberFormat));
             }
             return relData;
         }
@@ -149,11 +152,11 @@ namespace AP2_1
         {
             return currentCategory;
         }
-        float GetCurrentCategoryMinimum()
+        public float GetCurrentCategoryMinimum()
         {
             return minValues.ElementAt(categories.IndexOf(currentCategory));
         }
-        float GetCurrentCategoryMaximum() {
+        public float GetCurrentCategoryMaximum() {
             return maxValues.ElementAt(categories.IndexOf(currentCategory));
         }
 
