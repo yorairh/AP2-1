@@ -57,6 +57,7 @@
     </ApplicationDefinition>
     <Compile Include="InformationChangedEventArgs.cs" />
     <Compile Include="TimeChangedEventArgs.cs" />
+    <Compile Include="XMLFileUploadEventArgs.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -65,7 +66,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="FileUploadEventArgs.cs" />
+    <Compile Include="CSVFileUploadEventArgs.cs" />
     <Compile Include="IModel.cs" />
     <Compile Include="INotifyPropertyChanged.cs" />
     <Compile Include="IView.cs" />

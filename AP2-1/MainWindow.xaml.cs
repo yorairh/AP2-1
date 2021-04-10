@@ -53,9 +53,9 @@ namespace AP2_1
             vm = new FlightSimulatorViewModel(new FlightSimulatorModel());
 
             vm.notifyPropertyChanged += (object sender, EventArgs e) => {
-                if (e as FileUploadEventArgs != null)
+                if (e as CSVFileUploadEventArgs != null)
                 {
-                    FileUploadEventArgs args = e as FileUploadEventArgs;
+                    CSVFileUploadEventArgs args = e as CSVFileUploadEventArgs;
                     if (args.Info == PropertyChangedEventArgs.InfoVal.FileUpdated)
                     {
                         tbSuccess.Text = "File uploaded successfully";
@@ -115,6 +115,17 @@ namespace AP2_1
                             }
                             
                         });
+                    }
+                }
+                if (e as XMLFileUploadEventArgs != null)
+                {
+                    XMLFileUploadEventArgs args = e as XMLFileUploadEventArgs;
+                    if (args.Info == PropertyChangedEventArgs.InfoVal.FileUpdated)
+                    {
+                        foreach (string c in args.Categories)
+                        {
+                            propertyMenu.Items.Add(c);
+                        }
                     }
                 }
                 // more....

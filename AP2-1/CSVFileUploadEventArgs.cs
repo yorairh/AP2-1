@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace AP2_1
 {
-    class FileUploadEventArgs : PropertyChangedEventArgs
+    class CSVFileUploadEventArgs : PropertyChangedEventArgs
     {
         int length;
-        public FileUploadEventArgs(InfoVal info, int length) : base(info)
+        public CSVFileUploadEventArgs(InfoVal info, int length) : base(info)
         {
             this.length = length;
         }

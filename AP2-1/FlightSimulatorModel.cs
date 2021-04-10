@@ -53,16 +53,16 @@ namespace AP2_1
                     {
                         ++arg.index;
                         string[] currData = fileData[currIndex].Split(',');
-                        float aileron = float.Parse(currData[0], CultureInfo.InvariantCulture.NumberFormat);
-                        float elevator = float.Parse(currData[1], CultureInfo.InvariantCulture.NumberFormat);
-                        float rudder = float.Parse(currData[2], CultureInfo.InvariantCulture.NumberFormat);
-                        float throttle = float.Parse(currData[6], CultureInfo.InvariantCulture.NumberFormat);
-                        float altimeter = float.Parse(currData[25], CultureInfo.InvariantCulture.NumberFormat);
-                        float airSpeed = float.Parse(currData[21], CultureInfo.InvariantCulture.NumberFormat);
-                        float orientation = float.Parse(currData[19], CultureInfo.InvariantCulture.NumberFormat);
-                        float roll = float.Parse(currData[17], CultureInfo.InvariantCulture.NumberFormat);
-                        float pitch = float.Parse(currData[18], CultureInfo.InvariantCulture.NumberFormat);
-                        float yaw = float.Parse(currData[20], CultureInfo.InvariantCulture.NumberFormat);
+                        float aileron = float.Parse(currData[categories.IndexOf("aileron")], CultureInfo.InvariantCulture.NumberFormat);
+                        float elevator = float.Parse(currData[categories.IndexOf("elevator")], CultureInfo.InvariantCulture.NumberFormat);
+                        float rudder = float.Parse(currData[categories.IndexOf("rudder")], CultureInfo.InvariantCulture.NumberFormat);
+                        float throttle = float.Parse(currData[categories.IndexOf("throttle")], CultureInfo.InvariantCulture.NumberFormat);
+                        float altimeter = float.Parse(currData[categories.IndexOf("altitude-ft")], CultureInfo.InvariantCulture.NumberFormat);
+                        float airSpeed = float.Parse(currData[categories.IndexOf("airspeed-kt")], CultureInfo.InvariantCulture.NumberFormat);
+                        float orientation = float.Parse(currData[categories.IndexOf("heading-deg")], CultureInfo.InvariantCulture.NumberFormat);
+                        float roll = float.Parse(currData[categories.IndexOf("roll-deg")], CultureInfo.InvariantCulture.NumberFormat);
+                        float pitch = float.Parse(currData[categories.IndexOf("pitch-deg")], CultureInfo.InvariantCulture.NumberFormat);
+                        float yaw = float.Parse(currData[categories.IndexOf("side-slip-deg")], CultureInfo.InvariantCulture.NumberFormat);
                         float[] info = { aileron, elevator, rudder, throttle, altimeter, airSpeed, orientation, roll, pitch, yaw};
                         arg.notifyPropertyChanged(arg, new InformationChangedEventArgs(PropertyChangedEventArgs.InfoVal.InfoChanged, info));
                         string newTime = TimeFormat(arg.index / 10);
@@ -101,7 +101,8 @@ namespace AP2_1
                 }
             }
             // notify uploaded
-            notifyPropertyChanged(this, new FileUploadEventArgs(PropertyChangedEventArgs.InfoVal.FileUpdated, fileData.Length));
+            notifyPropertyChanged(this, new CSVFileUploadEventArgs(PropertyChangedEventArgs.InfoVal.FileUpdated, fileData.Length));
+            notifyPropertyChanged(this, new XMLFileUploadEventArgs(PropertyChangedEventArgs.InfoVal.FileUpdated, categories));
 
             // create the thread uploading the file lines
             index = 0;

@@ -67,6 +67,9 @@
             <TextBlock Canvas.Left="634" TextWrapping="Wrap" Text="0" Canvas.Top="194" Foreground="#FFB9B2AD" Height="14" Width="9" FontSize="10"/>
             <TextBlock Canvas.Left="625" TextWrapping="Wrap" Text="360" Canvas.Top="319" Foreground="#FFB9B2AD" Height="14" Width="21" FontSize="10"/>
         </Canvas>
+        <Menu HorizontalAlignment="Left" Margin="100 100 0 0" VerticalAlignment="Top" Height="Auto" Width="Auto">
+            <MenuItem x:Name="propertyMenu" Header="Choose Property"/>
+        </Menu>
 
     </Grid>
 </Window>

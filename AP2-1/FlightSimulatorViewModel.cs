@@ -17,9 +17,9 @@ namespace AP2_1
             this.model = model;
 
             model.notifyPropertyChanged += (object sender, EventArgs e) => {
-                if (e as FileUploadEventArgs != null)
+                if (e as CSVFileUploadEventArgs != null)
                 {
-                    FileUploadEventArgs args = e as FileUploadEventArgs;
+                    CSVFileUploadEventArgs args = e as CSVFileUploadEventArgs;
                     if (args.Info == PropertyChangedEventArgs.InfoVal.FileUpdated)
                     {
                         notifyPropertyChanged(this, args);
@@ -37,6 +37,14 @@ namespace AP2_1
                 {
                     InformationChangedEventArgs args = e as InformationChangedEventArgs;
                     if (args.Info == PropertyChangedEventArgs.InfoVal.InfoChanged)
+                    {
+                        notifyPropertyChanged(this, args);
+                    }
+                }
+                if (e as XMLFileUploadEventArgs != null)
+                {
+                    XMLFileUploadEventArgs args = e as XMLFileUploadEventArgs;
+                    if (args.Info == PropertyChangedEventArgs.InfoVal.FileUpdated)
                     {
                         notifyPropertyChanged(this, args);
                     }
