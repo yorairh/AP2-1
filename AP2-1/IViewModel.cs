@@ -8,12 +8,14 @@ namespace AP2_1
 {
     interface IViewModel : INotifyPropertyChanged
     {
+
         void UploadFile(string pathCSV, string pathXML);
         void SetPause(bool pause);
         void Jump(int len);
         void SetTime(int time);
         void SetSpeed(double speed);
         void SetCurrentCategory(string category);
+        void UpdateGraph();
         void Exit();
     }
 }

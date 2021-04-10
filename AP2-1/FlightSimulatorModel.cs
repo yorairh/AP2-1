@@ -62,6 +62,7 @@ namespace AP2_1
                         float rudder = float.Parse(currData[categories.IndexOf("rudder")], CultureInfo.InvariantCulture.NumberFormat);
                         float throttle = float.Parse(currData[categories.IndexOf("throttle")], CultureInfo.InvariantCulture.NumberFormat);
                         float altimeter = float.Parse(currData[categories.IndexOf("altitude-ft")], CultureInfo.InvariantCulture.NumberFormat);
+                        Console.WriteLine(altimeter);
                         float airSpeed = float.Parse(currData[categories.IndexOf("airspeed-kt")], CultureInfo.InvariantCulture.NumberFormat);
                         float orientation = float.Parse(currData[categories.IndexOf("heading-deg")], CultureInfo.InvariantCulture.NumberFormat);
                         float roll = float.Parse(currData[categories.IndexOf("roll-deg")], CultureInfo.InvariantCulture.NumberFormat);
@@ -109,7 +110,6 @@ namespace AP2_1
             maxValues = new List<int>(categories.Count);
             for (int i = 0; i < fileData.Length; ++i)
             {
-                List<int> max = new List<int>(categories.Count), min = new List<int>(categories.Count);
                 string[] curr = fileData[i].Split(',');
                 for (int j = 0; j < curr.Length; ++j)
                 {
@@ -134,10 +134,7 @@ namespace AP2_1
 
         public List<float> GetRelevantData()
         {
-            if (currentCategory == null)
-            {
-                return null;
-            }
+            if (currentCategory == null) return null;
             int currIndex;
             lock (indexLock)
             {
@@ -145,6 +142,10 @@ namespace AP2_1
             }
             int firstIndex = (currIndex - 29 < 0 ? 0 : currIndex - 29);
             List<float> relData = new List<float>();
+            if (currIndex >= fileData.Length)
+            {
+                currIndex = fileData.Length - 1;
+            }
             for (int i = firstIndex; i <= currIndex; ++i)
             {
                 relData.Add(float.Parse(fileData[i].Split(',')[categories.IndexOf(currentCategory)], CultureInfo.InvariantCulture.NumberFormat));
@@ -203,7 +204,7 @@ namespace AP2_1
 
         public void SetCurrentCategory(string category)
         {
-            this.currentCategory = category;
+            this.currentCategory = (category == "Choose property" ? null : category);
         }
 
         public void Exit()

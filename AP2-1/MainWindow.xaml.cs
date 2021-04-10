@@ -7,6 +7,7 @@ using System.Text.RegularExpressions;
 using System.Windows.Input;
 using System.Windows.Controls;
 using System.Windows.Media;
+using OxyPlot.Series;
 
 namespace AP2_1
 {
@@ -53,6 +54,8 @@ namespace AP2_1
             vm = new FlightSimulatorViewModel(new FlightSimulatorModel());
             CurrCategoryPlot.DataContext = vm;
 
+            CompositionTarget.Rendering += CompositionTarget_Rendering;
+
             vm.notifyPropertyChanged += (object sender, EventArgs e) => {
                 if (e as CSVFileUploadEventArgs != null)
                 {
@@ -93,14 +96,14 @@ namespace AP2_1
                             tbHeight.Text = args.Altimeter.ToString();
                             if (args.Roll < 0.0)
                             {
-                                recRoll.Height = (int)((360 - args.Roll) / 3);
+                                recRoll.Height = (int)((360 + args.Roll) / 3);
                             } else
                             {
                                 recRoll.Height = (int)(args.Roll / 3);
                             }
                             if (args.Pitch < 0.0)
                             {
-                                recPitch.Height = (int)((360 - args.Pitch) / 3);
+                                recPitch.Height = (int)((360 + args.Pitch) / 3);
                             }
                             else
                             {
@@ -108,13 +111,14 @@ namespace AP2_1
                             }
                             if (args.Yaw < 0.0)
                             {
-                                recYaw.Height = (int)((360 - args.Yaw) / 3);
+                                recYaw.Height = (int)((360 + args.Yaw) / 3);
                             }
                             else
                             {
                                 recYaw.Height = (int)(args.Yaw / 3);
                             }
-                            CurrCategoryPlot?.Model?.InvalidatePlot(true);
+                            // vm?.UpdateGraph();
+                            // CurrCategoryPlot?.InvalidatePlot(true);
                         });
                     }
                 }
@@ -135,6 +139,15 @@ namespace AP2_1
                 }
                 // more....
             };
+        }
+
+        private void CompositionTarget_Rendering(object sender, EventArgs e)
+        {
+            vm?.UpdateGraph();
+            if (CurrCategoryPlot?.Model?.Series != null)
+            {
+                CurrCategoryPlot.InvalidatePlot(true);
+            }
         }
 
         private void CSV_Click(object sender, RoutedEventArgs e)
@@ -304,7 +317,7 @@ namespace AP2_1
         private void propertyMenu_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             ComboBox cb = sender as ComboBox;
-            vm?.SetCurrentCategory(cb.SelectedItem.ToString());
+            vm?.SetCurrentCategory((cb.SelectedItem as ComboBoxItem).Content.ToString());
         }
     }  
 }

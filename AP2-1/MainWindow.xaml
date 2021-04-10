@@ -67,6 +67,6 @@
                 <ComboBoxItem IsSelected="True" Background="#FFD9DCCE" Content="Choose property"/>
             </ComboBox>
         </Canvas>
-        <oxy:PlotView x:Name="CurrCategoryPlot" Model="{Binding Path=currCategoryPM}" Margin="36,100,477,168"></oxy:PlotView>
+        <oxy:PlotView x:Name="CurrCategoryPlot" Model="{Binding VM_CurrCategoryPM}" Margin="15,76,235,102"></oxy:PlotView>
     </Grid>
 </Window>

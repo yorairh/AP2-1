@@ -14,6 +14,17 @@ namespace AP2_1
         private IModel model;
 
         private PlotModel currCategoryPM;
+        public PlotModel VM_CurrCategoryPM
+        {
+            get
+            {
+                return currCategoryPM;
+            }
+            set
+            {
+                currCategoryPM = value;
+            }
+        }
 
         public event propertyChanged notifyPropertyChanged;
 
@@ -21,7 +32,21 @@ namespace AP2_1
         {
             this.model = model;
             this.currCategoryPM = new PlotModel();
-            
+            currCategoryPM.Axes.Add(new LinearAxis
+            {
+                Title = "Time",
+                Minimum = -5,
+                Maximum = 35,
+                Position = AxisPosition.Bottom
+            });
+            currCategoryPM.Axes.Add(new LinearAxis
+            {
+                Title = "",
+                Minimum = 0,
+                Maximum = 0,
+                Position = AxisPosition.Left
+            });
+
 
             model.notifyPropertyChanged += (object sender, EventArgs e) => {
                 if (e as CSVFileUploadEventArgs != null)
@@ -46,7 +71,7 @@ namespace AP2_1
                     if (args.Info == PropertyChangedEventArgs.InfoVal.InfoChanged)
                     {
                         notifyPropertyChanged(this, args);
-                        UpdateGraph();
+                        // UpdateGraph();
                     }
                 }
                 if (e as XMLFileUploadEventArgs != null)
@@ -65,6 +90,7 @@ namespace AP2_1
         {
             var data = model.GetRelevantData();
             if (data == null) return;
+            /*
             currCategoryPM.Axes.Clear();
             var xAxes = new LinearAxis
             {
@@ -74,6 +100,7 @@ namespace AP2_1
                 Position = AxisPosition.Bottom
             };
             currCategoryPM.Axes.Add(xAxes);
+
             var yAxes = new LinearAxis()
             {
                 Title = model.GetCurrentCategory(),
@@ -86,13 +113,50 @@ namespace AP2_1
             {
                 MarkerType = MarkerType.Circle
             };
+            */
+
+            if (currCategoryPM.Axes.Count > 1)
+            {
+                var yAxis = currCategoryPM.Axes.ElementAt(1);
+                yAxis.Minimum = model.GetCurrentCategoryMinimum();
+                yAxis.Maximum = model.GetCurrentCategoryMaximum();
+                yAxis.Title = model.GetCurrentCategory();
+            }
+
+            currCategoryPM?.Series?.Clear();
+            List<ScatterPoint> points = new List<ScatterPoint>();
+            for (int i = 0; i < data.Count; ++i)
+            {
+                points.Add(new ScatterPoint(i, data.ElementAt(i)));
+            }
+            currCategoryPM?.Series?.Add(new ScatterSeries
+            {
+                ItemsSource = points,
+                MarkerSize = 2,
+                MarkerType = MarkerType.Circle
+            });
+            /*
+            if (currCategoryPM.Series.Count > 0)
+            {
+                var series = currCategoryPM.Series.ElementAt(0) as ScatterSeries;
+                if (series != null && series.Points.Count > 0)
+                {
+                    // series.Points.RemoveAt(0);
+                    series.Points.Add(new ScatterPoint(data.Count, data.ElementAt(data.Count)));
+                }
+            }
+
+
+
             List<ScatterPoint> points = new List<ScatterPoint>();
             for (int i = 0; i < data.Count; ++i)
             {
                 points.Add(new ScatterPoint(i, data.ElementAt(i)));
             }
             series.ItemsSource = points;
+
             currCategoryPM.Series.Add(series);
+            */
         } 
 
         public void UploadFile(string pathCSV, string pathXML)
