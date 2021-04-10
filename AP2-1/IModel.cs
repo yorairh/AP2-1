@@ -11,7 +11,7 @@ namespace AP2_1
 
         void SetPause(bool pause);
 
-        void UploadFile(string PathToFile);
+        void UploadFile(string PathCSV, string PathXML);
         void Jump(int val);
         void SetTime(int time);
         void SetSpeed(double speed);

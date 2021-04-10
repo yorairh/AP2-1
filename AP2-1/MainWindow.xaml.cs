@@ -16,6 +16,7 @@ namespace AP2_1
     {
         IViewModel vm;
         private string pathToFile;
+        private string pathToXML;
 
         private static readonly double JOYSTICK_RATIO = 3; // Joystick size / JoystickHandleSize
         private void SetJoystick()
@@ -120,7 +121,7 @@ namespace AP2_1
             };
         }
 
-        private void Explore_Click(object sender, RoutedEventArgs e)
+        private void CSV_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog fd = new OpenFileDialog();
             bool? result = fd.ShowDialog();
@@ -143,10 +144,31 @@ namespace AP2_1
             }
         }
 
+        private void XML_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog fd = new OpenFileDialog();
+            bool? result = fd.ShowDialog();
+            if (result == true)
+            {
+                string path = fd.FileName;
+                if (path.EndsWith(".xml"))
+                {
+                    pathToXML = fd.FileName;
+                    tbPath.Text = "Please Enter a .csv file";
+                    btnCSV.Visibility = Visibility.Visible;
+                    btnXML.Visibility = Visibility.Hidden;
+                }
+                else
+                {
+                    tbPath.Text = "The file you entered is not a .xml file. Please Enter a .xml file.";
+                }
+            }
+        }
+
         private void Upload_Click(object sender, RoutedEventArgs e)
         {
             // upload the file
-            vm.UploadFile(pathToFile);
+            vm.UploadFile(pathToFile, pathToXML);
         }
 
         private void BtnPlay_Click(object sender, RoutedEventArgs e)

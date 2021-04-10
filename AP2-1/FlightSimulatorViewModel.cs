@@ -45,9 +45,9 @@ namespace AP2_1
             };
         }
 
-        public void UploadFile(string path)
+        public void UploadFile(string pathCSV, string pathXML)
         {
-            model.UploadFile(path);
+            model.UploadFile(pathCSV, pathXML);
         }
 
         public void SetPause(bool pause)

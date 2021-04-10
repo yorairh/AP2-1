@@ -10,6 +10,7 @@ using System.Net.Sockets;
 using System.Net;
 using System.ComponentModel;
 using System.Globalization;
+using System.Xml;
 
 namespace AP2_1
 {
@@ -17,6 +18,7 @@ namespace AP2_1
     {
         private Thread sendFileThread;
         private string[] fileData;
+        private List<string> categories;
         private double sendingSpeed;
         private volatile int index;
         private volatile bool pause;
@@ -75,7 +77,7 @@ namespace AP2_1
             }
         }
 
-        public void UploadFile(string path)
+        public void UploadFile(string pathCSV, string pathXML)
         {
             if (sendFileThread != null)
             {
@@ -83,8 +85,21 @@ namespace AP2_1
                 sendFileThread = null;
             }
 
-            // upload the file
-            fileData = File.ReadAllLines(path);
+            // upload the CSV file
+            fileData = File.ReadAllLines(pathCSV);
+            //upload the XML file
+            categories = new List<string>();
+            XmlDocument doc = new XmlDocument();
+            doc.Load(pathXML);
+            XmlNode input = doc.GetElementsByTagName("input").Item(0);
+            foreach (XmlNode child in input.ChildNodes)
+            {
+                foreach (XmlNode item in child.ChildNodes)
+                {
+                    if (item.Name == "name")
+                        categories.Add(item.InnerText);
+                }
+            }
             // notify uploaded
             notifyPropertyChanged(this, new FileUploadEventArgs(PropertyChangedEventArgs.InfoVal.FileUpdated, fileData.Length));
 
