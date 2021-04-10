@@ -64,6 +64,7 @@ namespace AP2_1
         public void UpdateGraph()
         {
             var data = model.GetRelevantData();
+            if (data == null) return;
             currCategoryPM.Axes.Clear();
             var xAxes = new LinearAxis
             {

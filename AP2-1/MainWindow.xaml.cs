@@ -6,6 +6,7 @@ using System.Threading;
 using System.Text.RegularExpressions;
 using System.Windows.Input;
 using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace AP2_1
 {
@@ -113,7 +114,7 @@ namespace AP2_1
                             {
                                 recYaw.Height = (int)(args.Yaw / 3);
                             }
-                            CurrCategoryPlot.Model.InvalidatePlot(true);
+                            CurrCategoryPlot?.Model?.InvalidatePlot(true);
                         });
                     }
                 }
@@ -124,7 +125,11 @@ namespace AP2_1
                     {
                         foreach (string c in args.Categories)
                         {
-                            propertyMenu.Items.Add(c);
+                            propertyMenu.Items.Add(new ComboBoxItem()
+                            {
+                                Content = c,
+                                Background = (SolidColorBrush)new BrushConverter().ConvertFrom("#FFDDDDDD")
+                            });
                         }
                     }
                 }
@@ -296,13 +301,10 @@ namespace AP2_1
             vm.Exit();
         }
 
-        private void propertyMenu_Click(object sender, RoutedEventArgs e)
+        private void propertyMenu_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (sender as MenuItem != null)
-            {
-                MenuItem chosenItem = sender as MenuItem;
-                vm.SetCurrentCategory(chosenItem.Header.ToString());
-            }
+            ComboBox cb = sender as ComboBox;
+            vm?.SetCurrentCategory(cb.SelectedItem.ToString());
         }
     }  
 }

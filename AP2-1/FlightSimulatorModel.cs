@@ -134,14 +134,18 @@ namespace AP2_1
 
         public List<float> GetRelevantData()
         {
+            if (currentCategory == null)
+            {
+                return null;
+            }
             int currIndex;
             lock (indexLock)
             {
                 currIndex = index;
             }
-            int firstIndex = (currIndex - 30 < 0 ? 0 : currIndex - 30);
+            int firstIndex = (currIndex - 29 < 0 ? 0 : currIndex - 29);
             List<float> relData = new List<float>();
-            for (int i = firstIndex; i < currIndex; ++i)
+            for (int i = firstIndex; i <= currIndex; ++i)
             {
                 relData.Add(float.Parse(fileData[i].Split(',')[categories.IndexOf(currentCategory)], CultureInfo.InvariantCulture.NumberFormat));
             }

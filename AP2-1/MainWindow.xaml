@@ -7,16 +7,13 @@
         xmlns:oxy="http://oxyplot.org/wpf"
         mc:Ignorable="d"
         Title="Flight Simulator" Height="450" Width="800" Closing="Window_Closing">
-    <Grid Background="LightGray">
+    <Grid Background="#FFD9DCCE">
         <Button x:Name="btnXML" Content="XML File" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="auto" Click="XML_Click"/>
         <Button x:Name="btnCSV" Content="CSV File " HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="auto" Click="CSV_Click" Visibility="Hidden"/>
         <TextBlock Name="tbPath" HorizontalAlignment="Left" Margin="10,35,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="auto" Text="Please enter a .xml file"/>
         <Button x:Name="btnUpload" Content="Upload" HorizontalAlignment="Left" Margin="10,56,0,0" VerticalAlignment="Top" Width="75" Click="Upload_Click" Visibility="Hidden"/>
         <TextBlock Name="tbSuccess" HorizontalAlignment="Left" Margin="10,81,0,0" TextWrapping="Wrap" VerticalAlignment="Top"/>
         <Grid HorizontalAlignment="Left" Height="69" Margin="10,340,0,0" VerticalAlignment="Top" Width="772" Name="gridControl" Visibility="Visible">
-            <Grid.Background>
-                <SolidColorBrush Color="#FFD9DCCE"/>
-            </Grid.Background>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1*" />
                 <ColumnDefinition Width="1*" />
@@ -43,7 +40,6 @@
             <Slider Name="sldrTime" HorizontalAlignment="Stretch" Margin="0,15,0,0" Grid.Row="1" Grid.ColumnSpan="9" VerticalAlignment="Top" Minimum="0" Thumb.DragStarted="SldrTime_DragStarted" Thumb.DragCompleted="SldrTime_DragCompleted" Foreground="#FFE41C1C" Background="#FFD9DCCE" />
         </Grid>
         <Canvas Name="LayoutInfo" Visibility="Visible">
-            <Rectangle HorizontalAlignment="Left" Height="330" VerticalAlignment="Top" Width="431" Fill="#FFD9DCCE " Canvas.Left="351" Canvas.Top="10"/>
             <Ellipse x:Name ="Joystick" Height="120" Canvas.Left="651" Stroke="Black" Canvas.Top="18" Width="120">
                 <Ellipse.Fill>
                     <VisualBrush>
@@ -67,9 +63,9 @@
             <TextBlock Canvas.Left="645" TextWrapping="Wrap" Text="R  P  Y" Canvas.Top="186" Foreground="#FFB9B2AD" Height="13" Width="30" FontSize="10"/>
             <TextBlock Canvas.Left="634" TextWrapping="Wrap" Text="0" Canvas.Top="194" Foreground="#FFB9B2AD" Height="14" Width="9" FontSize="10"/>
             <TextBlock Canvas.Left="625" TextWrapping="Wrap" Text="360" Canvas.Top="319" Foreground="#FFB9B2AD" Height="14" Width="21" FontSize="10"/>
-            <Menu Margin=" 360 30 0 0" >
-                <MenuItem x:Name="propertyMenu" Header="Properties" Click="propertyMenu_Click" Background="#FFDDDDDD" BorderBrush="Black" Width="Auto"/>
-            </Menu>
+            <ComboBox x:Name="propertyMenu" Margin=" 360 25 0 0" SelectionChanged="propertyMenu_SelectionChanged">
+                <ComboBoxItem IsSelected="True" Background="#FFD9DCCE" Content="Choose property"/>
+            </ComboBox>
         </Canvas>
         <oxy:PlotView x:Name="CurrCategoryPlot" Model="{Binding Path=currCategoryPM}" Margin="36,100,477,168"></oxy:PlotView>
     </Grid>
