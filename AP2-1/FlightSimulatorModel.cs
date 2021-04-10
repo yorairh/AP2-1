@@ -19,6 +19,8 @@ namespace AP2_1
         private Thread sendFileThread;
         private string[] fileData;
         private List<string> categories;
+        public List<int> minValues;
+        public List<int> maxValues;
         private double sendingSpeed;
         private volatile int index;
         private volatile bool pause;
@@ -101,6 +103,19 @@ namespace AP2_1
                         categories.Add(item.InnerText);
                 }
             }
+
+            for (int i = 0; i < fileData.Length; ++i)
+            {
+                List<int> max = new List<int>(categories.Count), min = new List<int>(categories.Count);
+                string[] curr = fileData[i].Split(',');
+                for (int j = 0; j < curr.Length; ++j)
+                {
+                    float val = float.Parse(curr[j], CultureInfo.InvariantCulture.NumberFormat);
+                    if (val < minValues.ElementAt(j)) minValues.Insert(j, (int) val);
+                    if (val > maxValues.ElementAt(j)) maxValues.Insert(j, (int) val);
+                }
+            }
+
             // notify uploaded
             notifyPropertyChanged(this, new CSVFileUploadEventArgs(PropertyChangedEventArgs.InfoVal.FileUpdated, fileData.Length));
             notifyPropertyChanged(this, new XMLFileUploadEventArgs(PropertyChangedEventArgs.InfoVal.FileUpdated, categories));
@@ -114,7 +129,7 @@ namespace AP2_1
             sendFileThread.Start(this);
         }
 
-        private List<string> GetRelevantData()
+        public List<float> GetRelevantData()
         {
             int currIndex;
             lock (indexLock)
@@ -122,12 +137,24 @@ namespace AP2_1
                 currIndex = index;
             }
             int firstIndex = (currIndex - 30 < 0 ? 0 : currIndex - 30);
-            List<string> relData = new List<string>();
+            List<float> relData = new List<float>();
             for (int i = firstIndex; i < currIndex; ++i)
             {
-                relData.Add(fileData[i].Split(',')[categories.IndexOf(currentCategory)]);
+                relData.Add(float.Parse(fileData[i].Split(',')[categories.IndexOf(currentCategory)], CultureInfo.InvariantCulture.NumberFormat););
             }
             return relData;
+        }
+
+        public string GetCurrentCategory()
+        {
+            return currentCategory;
+        }
+        float GetCurrentCategoryMinimum()
+        {
+            return minValues.ElementAt(categories.IndexOf(currentCategory));
+        }
+        float GetCurrentCategoryMaximum() {
+            return maxValues.ElementAt(categories.IndexOf(currentCategory));
         }
 
         public void SetPause(bool pause)

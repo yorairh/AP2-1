@@ -16,6 +16,10 @@ namespace AP2_1
         void SetTime(int time);
         void SetSpeed(double speed);
         void SetCurrentCategory(string category);
+        List<float> GetRelevantData();
+        string GetCurrentCategory();
+        float GetCurrentCategoryMinimum();
+        float GetCurrentCategoryMaximum();
         void Exit();
     }
 }

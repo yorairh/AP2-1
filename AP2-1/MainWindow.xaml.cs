@@ -49,8 +49,8 @@ namespace AP2_1
             SetJoystick();
             SetRudder();
             SetThrottle();
-
             vm = new FlightSimulatorViewModel(new FlightSimulatorModel());
+            CurrCategoryPlot.DataContext = vm;
 
             vm.notifyPropertyChanged += (object sender, EventArgs e) => {
                 if (e as CSVFileUploadEventArgs != null)
@@ -113,7 +113,7 @@ namespace AP2_1
                             {
                                 recYaw.Height = (int)(args.Yaw / 3);
                             }
-                            
+                            CurrCategoryPlot.Model.InvalidatePlot(true);
                         });
                     }
                 }
