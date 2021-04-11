@@ -62,7 +62,6 @@ namespace AP2_1
                         float rudder = float.Parse(currData[categories.IndexOf("rudder")], CultureInfo.InvariantCulture.NumberFormat);
                         float throttle = float.Parse(currData[categories.IndexOf("throttle")], CultureInfo.InvariantCulture.NumberFormat);
                         float altimeter = float.Parse(currData[categories.IndexOf("altitude-ft")], CultureInfo.InvariantCulture.NumberFormat);
-                        Console.WriteLine(altimeter);
                         float airSpeed = float.Parse(currData[categories.IndexOf("airspeed-kt")], CultureInfo.InvariantCulture.NumberFormat);
                         float orientation = float.Parse(currData[categories.IndexOf("heading-deg")], CultureInfo.InvariantCulture.NumberFormat);
                         float roll = float.Parse(currData[categories.IndexOf("roll-deg")], CultureInfo.InvariantCulture.NumberFormat);

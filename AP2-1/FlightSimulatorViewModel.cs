@@ -127,7 +127,8 @@ namespace AP2_1
             {
                 ItemsSource = points,
                 MarkerSize = 2,
-                MarkerType = MarkerType.Circle
+                MarkerType = MarkerType.Circle,
+                MarkerFill = OxyColor.FromRgb(0, 0, 55)
             });
             /*
             if (currCategoryPM.Series.Count > 0)
