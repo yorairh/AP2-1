@@ -115,13 +115,7 @@ namespace AP2_1
             };
             */
 
-            if (currCategoryPM.Axes.Count > 1)
-            {
-                var yAxis = currCategoryPM.Axes.ElementAt(1);
-                yAxis.Minimum = model.GetCurrentCategoryMinimum();
-                yAxis.Maximum = model.GetCurrentCategoryMaximum();
-                yAxis.Title = model.GetCurrentCategory();
-            }
+            
 
             currCategoryPM?.Series?.Clear();
             List<ScatterPoint> points = new List<ScatterPoint>();
@@ -187,6 +181,13 @@ namespace AP2_1
         public void SetCurrentCategory(string category)
         {
             model.SetCurrentCategory(category);
+            if (currCategoryPM.Axes.Count > 1)
+            {
+                var yAxis = currCategoryPM.Axes.ElementAt(1);
+                yAxis.Minimum = model.GetCurrentCategoryMinimum() - 5;
+                yAxis.Maximum = model.GetCurrentCategoryMaximum() + 5;
+                yAxis.Title = model.GetCurrentCategory();
+            }
         }
 
         public void Exit()

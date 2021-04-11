@@ -82,6 +82,34 @@ namespace AP2_1
             }
         }
 
+        private void SetMinimumAndMaximum()
+        {
+            minValues = new List<int>();
+            maxValues = new List<int>();
+            string[] curr = fileData[0].Split(',');
+            for (int j = 0; j < categories.Count; ++j)
+            {
+                float val = float.Parse(curr[j], CultureInfo.InvariantCulture.NumberFormat);
+                minValues.Add((int) val);
+                maxValues.Add((int) val);
+            }
+
+            for (int i = 1; i < fileData.Length; ++i)
+            {
+                curr = fileData[i].Split(',');
+                for (int j = 0; j < categories.Count; ++j)
+                {
+                    float val = float.Parse(curr[j], CultureInfo.InvariantCulture.NumberFormat);
+                    if ((int) val < minValues.ElementAt(j)) 
+                        minValues[j] = (int) val;
+                        // minValues.Insert(j, (int)val);
+                    if ((int)val > maxValues.ElementAt(j))
+                        maxValues[j] = (int) val;
+                        // maxValues.Insert(j, (int)val);
+                }
+            }
+        }
+
         public void UploadFile(string pathCSV, string pathXML)
         {
             if (sendFileThread != null)
@@ -106,18 +134,20 @@ namespace AP2_1
                         categories.Add(item.InnerText);
                 }
             }
-            minValues = new List<int>(categories.Count);
-            maxValues = new List<int>(categories.Count);
-            for (int i = 0; i < fileData.Length; ++i)
-            {
-                string[] curr = fileData[i].Split(',');
-                for (int j = 0; j < curr.Length; ++j)
-                {
-                    float val = float.Parse(curr[j], CultureInfo.InvariantCulture.NumberFormat);
-                    if (i == 0 || val < minValues.ElementAt(j)) minValues.Insert(j, (int) val);
-                    if (i == 0 || val > maxValues.ElementAt(j)) maxValues.Insert(j, (int) val);
-                }
-            }
+
+            SetMinimumAndMaximum();
+            // minValues = new List<int>(categories.Count);
+            // maxValues = new List<int>(categories.Count);
+            // for (int i = 0; i < fileData.Length; ++i)
+            // {
+            //     string[] curr = fileData[i].Split(',');
+            //     for (int j = 0; j < curr.Length; ++j)
+            //     {
+            //         float val = float.Parse(curr[j], CultureInfo.InvariantCulture.NumberFormat);
+            //         if (i == 0 || val < minValues.ElementAt(j)) minValues.Insert(j, (int) val);
+            //         if (i == 0 || val > maxValues.ElementAt(j)) maxValues.Insert(j, (int) val);
+            //     }
+            // }
 
             // notify uploaded
             notifyPropertyChanged(this, new CSVFileUploadEventArgs(PropertyChangedEventArgs.InfoVal.FileUpdated, fileData.Length));
