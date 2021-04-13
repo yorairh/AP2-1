@@ -36,16 +36,16 @@
             <Slider Name="sldrTime" HorizontalAlignment="Stretch" Margin="0,15,0,0" Grid.Row="1" Grid.ColumnSpan="9" VerticalAlignment="Top" Minimum="0" Thumb.DragStarted="SldrTime_DragStarted" Thumb.DragCompleted="SldrTime_DragCompleted" Foreground="#FFE41C1C" Background="#FFD9DCCE" />
         </Grid>
         <Canvas Name="LayoutInfo" Visibility="Visible">
-            <Ellipse x:Name ="Joystick" Height="120" Canvas.Left="651" Stroke="Black" Canvas.Top="18" Width="120">
+            <Ellipse x:Name ="Joystick" Height="120" Canvas.Left="651" Canvas.Top="18" Width="120">
                 <Ellipse.Fill>
                     <VisualBrush>
                         <VisualBrush.Visual>
-                            <Image Source="joystick.png"/>
+                            <Image Source="joystick.png"></Image>
                         </VisualBrush.Visual>
                     </VisualBrush>
                 </Ellipse.Fill>
             </Ellipse>
-            <Ellipse x:Name ="JoystickHandle" Fill="#FFB9B2AD" Visibility="Visible"/>
+            <Ellipse x:Name ="JoystickHandle" Fill="#FFD9DCCE"/>
             <Rectangle x:Name="RudderLayout" Height="12" Canvas.Left="651" Stroke="#FFB9B2AD" Canvas.Top="143" Width="120" Fill="#FFD9DCCE"/>
             <Rectangle x:Name="RudderTracker" Fill="#FFB9B2AD"/>
             <Rectangle x:Name="ThrottleLayout" Height="120" Canvas.Left="634" Stroke="#FFB9B2AD" Canvas.Top="18" Width="12" Fill="#FFD9DCCE"/>

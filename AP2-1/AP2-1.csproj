@@ -116,8 +116,6 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="joystick.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="plugins\InnerCircle.dll" />
     <Content Include="plugins\LinearRegression.dll" />
   </ItemGroup>
