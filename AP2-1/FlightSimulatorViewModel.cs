@@ -28,6 +28,7 @@ namespace AP2_1
                 currCategoryPM = value;
             }
         }
+
         private PlotModel currCorrelatedCategoryPM;
         public PlotModel VM_CurrCorrelatedCategoryPM
         {
@@ -40,7 +41,20 @@ namespace AP2_1
                 currCorrelatedCategoryPM = value;
             }
         }
-        
+
+        private PlotModel correlatedAsFuncOfCurrent;
+        public PlotModel VM_CorrelatedAsFuncOfCurrent
+        {
+            get
+            {
+                return correlatedAsFuncOfCurrent;
+            }
+            set
+            {
+                correlatedAsFuncOfCurrent = value;
+            }
+        }
+
 
         public event propertyChanged notifyPropertyChanged;
 
@@ -80,6 +94,21 @@ namespace AP2_1
                 Position = AxisPosition.Left
             });
 
+            this.VM_CorrelatedAsFuncOfCurrent = new PlotModel();
+            VM_CorrelatedAsFuncOfCurrent.Axes.Add(new LinearAxis
+            {
+                Title = "",
+                Minimum = 0,
+                Maximum = 0,
+                Position = AxisPosition.Bottom
+            });
+            VM_CorrelatedAsFuncOfCurrent.Axes.Add(new LinearAxis
+            {
+                Title = "",
+                Minimum = 0,
+                Maximum = 0,
+                Position = AxisPosition.Left
+            });
 
             model.notifyPropertyChanged += (object sender, EventArgs e) => {
                 if (e as CSVAnomaliesFileUploadEventArgs != null)
@@ -211,7 +240,6 @@ namespace AP2_1
             if (corrData == null) return;
             VM_CurrCorrelatedCategoryPM?.Series?.Clear();
             List<ScatterPoint> corrPoints = new List<ScatterPoint>();
-            int timeStep = model.GetCurrentTimeStep();
             for (int i = 0; i < data.Count; ++i)
             {
                 corrPoints.Add(new ScatterPoint(i, corrData.ElementAt(i)));
@@ -223,6 +251,21 @@ namespace AP2_1
                 MarkerType = MarkerType.Circle,
                 MarkerFill = OxyColor.FromRgb(0, 0, 55)
             });
+
+            VM_CorrelatedAsFuncOfCurrent?.Series?.Clear();
+            List<ScatterPoint> scatterPoints = new List<ScatterPoint>();
+            for (int i = 0; i < data.Count; ++i)
+            {
+                scatterPoints.Add(new ScatterPoint(data[i], corrData[i]));
+            }
+
+            VM_CorrelatedAsFuncOfCurrent?.Series.Add(new ScatterSeries
+            {
+                ItemsSource = scatterPoints,
+                MarkerSize = 2,
+                MarkerType = MarkerType.Circle,
+                MarkerFill = OxyColor.FromRgb(0, 0, 55)
+            });
         }
 
         public void UploadFile(string pathCSVAnomalies, string pathXML, string pathCSVLearn)
@@ -230,7 +273,6 @@ namespace AP2_1
             // learn and detect anomalies
             learnFile = pathCSVLearn;
             detectAnomaliesAndSetResults(pathCSVAnomalies);
-            
 
             model.UploadFile(pathCSVAnomalies, pathXML);
         }
@@ -268,6 +310,19 @@ namespace AP2_1
             if (currCorrelatedCategoryPM.Axes.Count > 1)
             {
                 var yAxis = currCorrelatedCategoryPM.Axes.ElementAt(1);
+                string corrFeat = GetCorrelatedFeature(category);
+                yAxis.Minimum = model.GetCategoryMinimum(corrFeat) - 5;
+                yAxis.Maximum = model.GetCategoryMaximum(corrFeat) + 5;
+                yAxis.Title = corrFeat;
+            }
+            if (correlatedAsFuncOfCurrent.Axes.Count > 1)
+            {
+                var xAxis = correlatedAsFuncOfCurrent.Axes.ElementAt(0);
+                xAxis.Minimum = model.GetCategoryMinimum(category) - 5;
+                xAxis.Maximum = model.GetCategoryMaximum(category) + 5;
+                xAxis.Title = category;
+
+                var yAxis = correlatedAsFuncOfCurrent.Axes.ElementAt(1);
                 string corrFeat = GetCorrelatedFeature(category);
                 yAxis.Minimum = model.GetCategoryMinimum(corrFeat) - 5;
                 yAxis.Maximum = model.GetCategoryMaximum(corrFeat) + 5;

@@ -6,10 +6,10 @@
         xmlns:local="clr-namespace:AP2_1"
         xmlns:oxy="http://oxyplot.org/wpf"
         mc:Ignorable="d"
-        Title="Flight Simulator" Height="450" Width="800" Closing="Window_Closing">
+        Title="Flight Simulator" Height="600" Width="1200" Closing="Window_Closing">
     <Grid Background="#FFD9DCCE">
-        <Button x:Name="btnUpload" Content="Upload" HorizontalAlignment="Left" Margin="10,26,0,0" VerticalAlignment="Top" Width="75" Click="Upload_Click" Visibility="Hidden"/>
-        <Grid HorizontalAlignment="Left" Height="69" Margin="10,340,0,0" VerticalAlignment="Top" Width="772" Name="gridControl" Visibility="Visible">
+        <Button x:Name="btnUpload" Content="Upload" HorizontalAlignment="Left" Margin="652,299,0,0" VerticalAlignment="Top" Width="69" Click="Upload_Click" Visibility="Visible" Height="22"/>
+        <Grid HorizontalAlignment="Left" Height="69" Margin="50,500,0,0" VerticalAlignment="Top" Width="1100" Name="gridControl" Visibility="Visible">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1*" />
                 <ColumnDefinition Width="1*" />
@@ -52,12 +52,12 @@
             <Rectangle x:Name="ThrottleTracker" Fill="#FFB9B2AD"/>
             <TextBlock Canvas.Left="634" TextWrapping="Wrap" Text="Height:                         ft" Canvas.Top="170" Height="16" Width="137" FontWeight="Bold" Foreground="#FFB9B2AD"/>
             <TextBlock x:Name="tbHeight" Canvas.Left="689" TextWrapping="Wrap" Text="" Canvas.Top="170" FontWeight="Bold" Foreground="#FFB9B2AD"/>
-            <TextBlock Canvas.Left="604" TextWrapping="Wrap" Text="ROLL" Canvas.Top="186" Foreground="#FFB9B2AD" Height="14" Width="auto" FontSize="10" RenderTransformOrigin="0.5,-0.121" FontWeight="Bold"/>
-            <TextBlock Canvas.Left="660" TextWrapping="Wrap" Text="PITCH" Canvas.Top="186" Foreground="#FFB9B2AD" Height="14" Width="auto" FontSize="10" RenderTransformOrigin="0.5,-0.121" FontWeight="Bold"/>
-            <TextBlock Canvas.Left="725" TextWrapping="Wrap" Text="YAW" Canvas.Top="186" Foreground="#FFB9B2AD" Height="14" Width="auto" FontSize="10" RenderTransformOrigin="0.5,-0.121" FontWeight="Bold"/>
+            <TextBlock Canvas.Left="634" TextWrapping="Wrap" Text="ROLL" Canvas.Top="195" Foreground="#FFB9B2AD" Height="14" Width="auto" FontSize="10" RenderTransformOrigin="0.5,-0.121" FontWeight="Bold"/>
+            <TextBlock Canvas.Left="690" TextWrapping="Wrap" Text="PITCH" Canvas.Top="195" Foreground="#FFB9B2AD" Height="14" Width="auto" FontSize="10" RenderTransformOrigin="0.5,-0.121" FontWeight="Bold"/>
+            <TextBlock Canvas.Left="755" TextWrapping="Wrap" Text="YAW" Canvas.Top="195" Foreground="#FFB9B2AD" Height="14" Width="auto" FontSize="10" RenderTransformOrigin="0.5,-0.121" FontWeight="Bold"/>
 
-            <Ellipse Fill="#FFB9B2AD" Height="50" Canvas.Left="590" Stroke="Black" Canvas.Top="200" Width="50"/>
-            <Border Background="Black" BorderBrush="Black" CornerRadius="120 120 0 0" BorderThickness="1" Height="20" Canvas.Left="615" Canvas.Top="205" Width="2" RenderTransformOrigin="0.5 1">
+            <Ellipse Fill="#FFB9B2AD" Height="50" Canvas.Left="620" Stroke="Black" Canvas.Top="209" Width="50"/>
+            <Border Background="Black" BorderBrush="Black" CornerRadius="120 120 0 0" BorderThickness="1" Height="20" Canvas.Left="645" Canvas.Top="214" Width="2" RenderTransformOrigin="0.5 1">
                 <Border.RenderTransform>
                     <TransformGroup>
                         <ScaleTransform/>
@@ -67,8 +67,8 @@
                     </TransformGroup>
                 </Border.RenderTransform>
             </Border>
-            <Ellipse Fill="#FFB9B2AD" Height="50" Canvas.Left="650" Stroke="Black" Canvas.Top="200" Width="50"/>
-            <Border Background="Black" BorderBrush="Black" CornerRadius="120 120 0 0" BorderThickness="1" Height="20" Canvas.Left="675" Canvas.Top="205" Width="2" RenderTransformOrigin="0.5 1">
+            <Ellipse Fill="#FFB9B2AD" Height="50" Canvas.Left="680" Stroke="Black" Canvas.Top="209" Width="50"/>
+            <Border Background="Black" BorderBrush="Black" CornerRadius="120 120 0 0" BorderThickness="1" Height="20" Canvas.Left="705" Canvas.Top="214" Width="2" RenderTransformOrigin="0.5 1">
                 <Border.RenderTransform>
                     <TransformGroup>
                         <ScaleTransform/>
@@ -78,8 +78,8 @@
                     </TransformGroup>
                 </Border.RenderTransform>
             </Border>
-            <Ellipse Fill="#FFB9B2AD" Height="50" Canvas.Left="710" Stroke="Black" Canvas.Top="200" Width="50"/>
-            <Border Background="Black" RenderTransformOrigin="0.5 1" BorderBrush="Black" CornerRadius="120 120 0 0" BorderThickness="1" Height="20" Canvas.Left="735" Canvas.Top="205" Width="2">
+            <Ellipse Fill="#FFB9B2AD" Height="50" Canvas.Left="740" Stroke="Black" Canvas.Top="209" Width="50"/>
+            <Border Background="Black" RenderTransformOrigin="0.5 1" BorderBrush="Black" CornerRadius="120 120 0 0" BorderThickness="1" Height="20" Canvas.Left="765" Canvas.Top="214" Width="2">
                 <Border.RenderTransform>
                     <TransformGroup>
                         <ScaleTransform/>
@@ -89,7 +89,7 @@
                     </TransformGroup>
                 </Border.RenderTransform>
             </Border>
-            <Menu Height="Auto" Width="800" Canvas.Top="0" Canvas.Left="0">
+            <Menu Height="Auto" Width="1192" Canvas.Top="0" Canvas.Left="0">
                 <MenuItem Header="Settings">
                     <MenuItem x:Name="XMLMenu" Header="Choose .xml configuration file" Click="XML_Click"/>
                     <Separator/>
@@ -109,7 +109,8 @@
                 </MenuItem>
             </Menu>
         </Canvas>
-        <oxy:PlotView x:Name="CurrCategoryPlot" Model="{Binding VM_CurrCategoryPM}" Margin="34,51,577,195" BorderThickness="5" BorderBrush="#FFB9B2AD"/>
-        <oxy:PlotView x:Name="CurrCorrelatedCategoryPlot" Model="{Binding VM_CurrCorrelatedCategoryPM}" Margin="260,51,351,195" BorderThickness="5" BorderBrush="#FFB9B2AD"/>
+        <oxy:PlotView x:Name="CurrCategoryPlot" Model="{Binding VM_CurrCategoryPM}" Margin="36,38,1006,381" BorderThickness="5" Height="150" Width="150" BorderBrush="#FFB9B2AD"/>
+        <oxy:PlotView x:Name="CurrCorrelatedCategoryPlot" Model="{Binding VM_CurrCorrelatedCategoryPM}" Margin="36,166,1006,253" BorderThickness="5" Height="150" Width="150" BorderBrush="#FFB9B2AD"/>
+        <oxy:PlotView x:Name="CorrelatedAsFuncOfCurrent" Model="{Binding VM_CorrelatedAsFuncOfCurrent}" Margin="245,58,621,297" BorderThickness="5" BorderBrush="#FFB9B2AD"/>
     </Grid>
 </Window>
