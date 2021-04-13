@@ -8,11 +8,7 @@
         mc:Ignorable="d"
         Title="Flight Simulator" Height="450" Width="800" Closing="Window_Closing">
     <Grid Background="#FFD9DCCE">
-        <Button x:Name="btnXML" Content="XML File" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="auto" Click="XML_Click"/>
-        <Button x:Name="btnCSV" Content="CSV File " HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="auto" Click="CSV_Click" Visibility="Hidden"/>
-        <TextBlock Name="tbPath" HorizontalAlignment="Left" Margin="10,35,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="auto" Text="Please enter a .xml file"/>
-        <Button x:Name="btnUpload" Content="Upload" HorizontalAlignment="Left" Margin="10,56,0,0" VerticalAlignment="Top" Width="75" Click="Upload_Click" Visibility="Hidden"/>
-        <TextBlock Name="tbSuccess" HorizontalAlignment="Left" Margin="10,81,0,0" TextWrapping="Wrap" VerticalAlignment="Top"/>
+        <Button x:Name="btnUpload" Content="Upload" HorizontalAlignment="Left" Margin="10,26,0,0" VerticalAlignment="Top" Width="75" Click="Upload_Click" Visibility="Hidden"/>
         <Grid HorizontalAlignment="Left" Height="69" Margin="10,340,0,0" VerticalAlignment="Top" Width="772" Name="gridControl" Visibility="Visible">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1*" />
@@ -58,9 +54,6 @@
             <TextBlock x:Name="tbHeight" Canvas.Left="689" TextWrapping="Wrap" Text="" Canvas.Top="170" FontWeight="Bold" Foreground="#FFB9B2AD"/>
             <TextBlock Canvas.Left="604" TextWrapping="Wrap" Text="ROLL" Canvas.Top="186" Foreground="#FFB9B2AD" Height="14" Width="auto" FontSize="10" RenderTransformOrigin="0.5,-0.121" FontWeight="Bold"/>
             <TextBlock Canvas.Left="660" TextWrapping="Wrap" Text="PITCH" Canvas.Top="186" Foreground="#FFB9B2AD" Height="14" Width="auto" FontSize="10" RenderTransformOrigin="0.5,-0.121" FontWeight="Bold"/>
-            <ComboBox x:Name="propertyMenu" Margin=" 360 25 0 0" SelectionChanged="propertyMenu_SelectionChanged">
-                <ComboBoxItem IsSelected="True" Background="#FFD9DCCE" Content="Choose property"/>
-            </ComboBox>
             <TextBlock Canvas.Left="725" TextWrapping="Wrap" Text="YAW" Canvas.Top="186" Foreground="#FFB9B2AD" Height="14" Width="auto" FontSize="10" RenderTransformOrigin="0.5,-0.121" FontWeight="Bold"/>
 
             <Ellipse Fill="#FFB9B2AD" Height="50" Canvas.Left="590" Stroke="Black" Canvas.Top="200" Width="50"/>
@@ -96,7 +89,26 @@
                     </TransformGroup>
                 </Border.RenderTransform>
             </Border>
+            <Menu Height="Auto" Width="800" Canvas.Top="0" Canvas.Left="0">
+                <MenuItem Header="Settings">
+                    <MenuItem x:Name="XMLMenu" Header="Choose .xml configuration file" Click="XML_Click"/>
+                    <Separator/>
+                    <MenuItem x:Name="CSVLearningMenu" Header="Choose .csv learning file" Click="CSVLearningMenu_Click"/>
+                    <Separator/>
+                    <MenuItem x:Name="CSVAnomalyMenu" Header="Choose .csv anomaly file" Click="CSV_Click"/>
+                    <Separator/>
+                    <MenuItem x:Name="DLLMenu" Header="Choose .dll anomaly detection library">
+                        <MenuItem Header="LinearRegression"></MenuItem>
+                        <MenuItem Header="InnerCircle"></MenuItem>
+                        <Separator></Separator>
+                        <MenuItem Header="Add Another Library" Click="AddDLL_Click"></MenuItem>
+                    </MenuItem>
+                </MenuItem>
+                <MenuItem x:Name="Props" Header="Current Property">
+                    
+                </MenuItem>
+            </Menu>
         </Canvas>
-        <oxy:PlotView x:Name="CurrCategoryPlot" Model="{Binding VM_CurrCategoryPM}" Margin="15,76,235,102"></oxy:PlotView>
+        <oxy:PlotView x:Name="CurrCategoryPlot" Model="{Binding VM_CurrCategoryPM}" Margin="182,56,429,190"></oxy:PlotView>
     </Grid>
 </Window>

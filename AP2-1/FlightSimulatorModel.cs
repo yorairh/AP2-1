@@ -109,7 +109,7 @@ namespace AP2_1
             }
         }
 
-        public void UploadFile(string pathCSV, string pathXML)
+        public void UploadFile(string pathCSVAnomalies, string pathXML)
         {
             if (sendFileThread != null)
             {
@@ -118,7 +118,7 @@ namespace AP2_1
             }
 
             // upload the CSV file
-            fileData = File.ReadAllLines(pathCSV);
+            fileData = File.ReadAllLines(pathCSVAnomalies);
             //upload the XML file
             categories = new List<string>();
             
@@ -135,21 +135,9 @@ namespace AP2_1
             }
 
             SetMinimumAndMaximum();
-            // minValues = new List<int>(categories.Count);
-            // maxValues = new List<int>(categories.Count);
-            // for (int i = 0; i < fileData.Length; ++i)
-            // {
-            //     string[] curr = fileData[i].Split(',');
-            //     for (int j = 0; j < curr.Length; ++j)
-            //     {
-            //         float val = float.Parse(curr[j], CultureInfo.InvariantCulture.NumberFormat);
-            //         if (i == 0 || val < minValues.ElementAt(j)) minValues.Insert(j, (int) val);
-            //         if (i == 0 || val > maxValues.ElementAt(j)) maxValues.Insert(j, (int) val);
-            //     }
-            // }
 
             // notify uploaded
-            notifyPropertyChanged(this, new CSVFileUploadEventArgs(PropertyChangedEventArgs.InfoVal.FileUpdated, fileData.Length));
+            notifyPropertyChanged(this, new CSVAnomaliesFileUploadEventArgs(PropertyChangedEventArgs.InfoVal.FileUpdated, fileData.Length));
             notifyPropertyChanged(this, new XMLFileUploadEventArgs(PropertyChangedEventArgs.InfoVal.FileUpdated, categories));
 
             // create the thread uploading the file lines
@@ -186,12 +174,12 @@ namespace AP2_1
         {
             return currentCategory;
         }
-        public float GetCurrentCategoryMinimum()
+        public float GetCategoryMinimum(string category)
         {
-            return minValues.ElementAt(categories.IndexOf(currentCategory));
+            return minValues.ElementAt(categories.IndexOf(category));
         }
-        public float GetCurrentCategoryMaximum() {
-            return maxValues.ElementAt(categories.IndexOf(currentCategory));
+        public float GetCategoryMaximum(string category) {
+            return maxValues.ElementAt(categories.IndexOf(category));
         }
 
         public void SetPause(bool pause)

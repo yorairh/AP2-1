@@ -74,7 +74,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="CSVFileUploadEventArgs.cs" />
+    <Compile Include="CSVAnomaliesFileUploadEventArgs.cs" />
     <Compile Include="IModel.cs" />
     <Compile Include="INotifyPropertyChanged.cs" />
     <Compile Include="IView.cs" />
@@ -116,6 +116,10 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="joystick.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="plugins\InnerCircle.dll" />
+    <Content Include="plugins\LinearRegression.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

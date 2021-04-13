@@ -8,6 +8,7 @@ using System.Windows.Input;
 using System.Windows.Controls;
 using System.Windows.Media;
 using OxyPlot.Series;
+using System.IO;
 
 namespace AP2_1
 {
@@ -17,8 +18,13 @@ namespace AP2_1
     public partial class MainWindow : Window, IView
     {
         IViewModel vm;
-        private string pathToFile;
+        private string pathToAnomalyFile;
+        private string pathToLearningFile;
         private string pathToXML;
+
+        private bool hasXML = false, hasCSVAnomaly = false, hasCSVLearning = false;
+
+        private readonly string PLUGINS_DIR = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName + "\\plugins";
 
         private static readonly double JOYSTICK_RATIO = 3; // Joystick size / JoystickHandleSize
         private void SetJoystick()
@@ -45,24 +51,36 @@ namespace AP2_1
             Canvas.SetLeft(ThrottleTracker, Canvas.GetLeft(ThrottleLayout) - 2);
         }
 
+        private void SetPluginsDir()
+        {
+            foreach (string file in Directory.GetFiles(PLUGINS_DIR))
+            {
+                if (Path.GetFileName(file) != "InnerCircle.dll" && Path.GetFileName(file) != "LinearRegression.dll")
+                {
+                    File.Delete(file);
+                }
+            }
+        }
+
         public MainWindow()
         {
             InitializeComponent();
             SetJoystick();
             SetRudder();
             SetThrottle();
+            SetPluginsDir();
             vm = new FlightSimulatorViewModel(new FlightSimulatorModel());
             CurrCategoryPlot.DataContext = vm;
 
             CompositionTarget.Rendering += CompositionTarget_Rendering;
 
-            vm.notifyPropertyChanged += (object sender, EventArgs e) => {
-                if (e as CSVFileUploadEventArgs != null)
+            vm.notifyPropertyChanged += (object sender, EventArgs e) =>
+            {
+                if (e as CSVAnomaliesFileUploadEventArgs != null)
                 {
-                    CSVFileUploadEventArgs args = e as CSVFileUploadEventArgs;
+                    CSVAnomaliesFileUploadEventArgs args = e as CSVAnomaliesFileUploadEventArgs;
                     if (args.Info == PropertyChangedEventArgs.InfoVal.FileUpdated)
                     {
-                        tbSuccess.Text = "File uploaded successfully";
                         sldrTime.Maximum = args.Length;
                         gridControl.Visibility = Visibility.Visible;
                     }
@@ -72,7 +90,8 @@ namespace AP2_1
                     TimeChangedEventArgs args = e as TimeChangedEventArgs;
                     if (args.Info == PropertyChangedEventArgs.InfoVal.TimeChanged)
                     {
-                        this.Dispatcher.BeginInvoke(DispatcherPriority.Normal, (ThreadStart) delegate () {
+                        this.Dispatcher.BeginInvoke(DispatcherPriority.Normal, (ThreadStart)delegate ()
+                        {
                             sldrTime.Value = args.Seconds;
                             tbTime.Text = args.NewTime;
                         });
@@ -83,7 +102,8 @@ namespace AP2_1
                     InformationChangedEventArgs args = e as InformationChangedEventArgs;
                     if (args.Info == PropertyChangedEventArgs.InfoVal.InfoChanged)
                     {
-                        this.Dispatcher.BeginInvoke(DispatcherPriority.Normal, (ThreadStart) delegate () {
+                        this.Dispatcher.BeginInvoke(DispatcherPriority.Normal, (ThreadStart)delegate ()
+                        {
                             // the last 2 in every formula can be changed to JOYSTICK_RATIO in order to get the sensitivity fit the size of the joystick
                             int leftJoystick = (int)(Canvas.GetLeft(Joystick) + (Joystick.Width - JoystickHandle.Width) / 2 + (Joystick.Width - JoystickHandle.Width) * (args.Aileron) / 2),
                                 topJoystick = (int)(Canvas.GetTop(Joystick) + (Joystick.Height - JoystickHandle.Height) / 2 + (Joystick.Height - JoystickHandle.Height) * (args.Elevator) / 2);
@@ -109,16 +129,26 @@ namespace AP2_1
                     {
                         foreach (string c in args.Categories)
                         {
-                            propertyMenu.Items.Add(new ComboBoxItem()
+                            MenuItem item = new MenuItem
                             {
-                                Content = c,
-                                Background = (SolidColorBrush)new BrushConverter().ConvertFrom("#FFDDDDDD")
-                            });
+                                Header = c
+                            };
+                            item.Click += MenuItem_Click;
+                            Props.Items.Add(item);
                         }
                     }
                 }
                 // more....
             };
+        }
+
+        private void MenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            var mi = sender as MenuItem;
+            if (mi != null)
+            {
+                vm.SetCurrentCategory(mi.Header as string);
+            }
         }
 
         private void CompositionTarget_Rendering(object sender, EventArgs e)
@@ -137,18 +167,17 @@ namespace AP2_1
             if (result == true)
             {
                 string path = fd.FileName;
-                if (path.EndsWith(".csv")) {
-                    pathToFile = fd.FileName;
-                    tbPath.Text = "Path to .csv file: " + pathToFile;
-                    btnUpload.Visibility = Visibility.Visible;
-                    gridControl.Visibility = Visibility.Visible;
-                    LayoutInfo.Visibility = Visibility.Visible;
-                } else { 
-                    tbPath.Text = "The file you entered is not a .csv file. Please Enter a .csv file.";
-                    tbSuccess.Text = "";
-                    btnUpload.Visibility = Visibility.Hidden;
-                    gridControl.Visibility = Visibility.Hidden;
-                    LayoutInfo.Visibility = Visibility.Hidden;
+                if (path.EndsWith(".csv"))
+                {
+                    pathToAnomalyFile = fd.FileName;
+                    hasCSVAnomaly = true;
+                    SetUploadButton();
+                }
+                else
+                {
+                    // tbPath.Text = "The file you entered is not a .csv file. Please Enter a .csv file.";
+                    MessageBox.Show("The file you entered is not a .csv file. Please Enter a .csv file.");
+                    hasCSVAnomaly = false;
                 }
             }
         }
@@ -163,21 +192,32 @@ namespace AP2_1
                 if (path.EndsWith(".xml"))
                 {
                     pathToXML = fd.FileName;
-                    tbPath.Text = "Please Enter a .csv file";
-                    btnCSV.Visibility = Visibility.Visible;
-                    btnXML.Visibility = Visibility.Hidden;
+                    hasXML = true;
+                    SetUploadButton();
                 }
                 else
                 {
-                    tbPath.Text = "The file you entered is not a .xml file. Please Enter a .xml file.";
+                    MessageBox.Show("The file you entered is not a .xml file. Please Enter a .xml file.");
+                    hasXML = false;
                 }
+            }
+        }
+
+        private void SetUploadButton()
+        {
+            if (hasXML && hasCSVAnomaly && hasCSVLearning)
+            {
+                btnUpload.Visibility = Visibility.Visible;
+            } else
+            {
+                btnUpload.Visibility = Visibility.Hidden;
             }
         }
 
         private void Upload_Click(object sender, RoutedEventArgs e)
         {
             // upload the file
-            vm.UploadFile(pathToFile, pathToXML);
+            vm.UploadFile(pathToAnomalyFile, pathToXML, pathToLearningFile);
         }
 
         private void BtnPlay_Click(object sender, RoutedEventArgs e)
@@ -189,7 +229,7 @@ namespace AP2_1
         {
             vm.SetPause(true);
         }
-        
+
         private void BtnFastBackward_Click(object sender, RoutedEventArgs e)
         {
             vm.Jump(-50);
@@ -208,7 +248,7 @@ namespace AP2_1
 
         private void SldrTime_DragCompleted(object sender, System.Windows.Controls.Primitives.DragCompletedEventArgs e)
         {
-            int val = (int) ((Slider)sender).Value;
+            int val = (int)((Slider)sender).Value;
             vm.SetTime(val);
             vm.SetPause(false);
         }
@@ -242,12 +282,12 @@ namespace AP2_1
                     if (Math.Round(speed, 1, MidpointRounding.AwayFromZero) < speed)
                     {
                         speed = Math.Round(speed + 0.1, 1, MidpointRounding.AwayFromZero);
-                    } 
+                    }
                     else
                     {
                         speed = Math.Round(speed, 1, MidpointRounding.AwayFromZero);
                     }
-                } 
+                }
                 else
                 {
                     speed = Math.Round(speed + 0.1, 1, MidpointRounding.AwayFromZero);
@@ -299,5 +339,64 @@ namespace AP2_1
             ComboBox cb = sender as ComboBox;
             vm?.SetCurrentCategory((cb.SelectedItem as ComboBoxItem).Content.ToString());
         }
-    }  
+
+        private void CSVLearningMenu_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog fd = new OpenFileDialog();
+            bool? result = fd.ShowDialog();
+            if (result == true)
+            {
+                string path = fd.FileName;
+                if (path.EndsWith(".csv"))
+                {
+                    pathToLearningFile = fd.FileName;
+                    hasCSVLearning = true;
+                    SetUploadButton();
+                }
+                else
+                {
+                    MessageBox.Show("The file you entered is not a .csv file. Please Enter a .csv file.");
+                    hasCSVLearning = false;
+                }
+            }
+        }
+
+        private void AddDLL_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog fd = new OpenFileDialog();
+            bool? result = fd.ShowDialog();
+            if (result == true)
+            {
+                string path = fd.FileName;
+                if (path.EndsWith(".dll"))
+                {
+                    string withoutExt = Path.GetFileNameWithoutExtension(path);
+                    string name = Path.GetFileName(path);
+                    File.Copy(path, Path.Combine(PLUGINS_DIR, name));
+                    MenuItem item = new MenuItem
+                    {
+                        Header = withoutExt
+                    };
+                    item.Click += DllChoosed_Click;
+                    DLLMenu.Items.Insert(DLLMenu.Items.Count - 2, item);
+                }
+                else
+                {
+                    MessageBox.Show("The file you entered is not a .dll file. Please try again.");
+                }
+            }
+        }
+
+        private void DllChoosed_Click(object sender, RoutedEventArgs e)
+        {
+            MenuItem item = sender as MenuItem;
+            vm?.SetLibrary(item.Header as string);
+        }
+
+        private void AnomalyDetectionAlgo_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            ComboBox cb = sender as ComboBox;
+            vm?.SetLibrary((cb.SelectedItem as ComboBoxItem).Content.ToString());
+        }
+    }
 }

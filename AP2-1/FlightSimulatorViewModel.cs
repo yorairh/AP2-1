@@ -3,7 +3,9 @@ using OxyPlot.Axes;
 using OxyPlot.Series;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -12,6 +14,7 @@ namespace AP2_1
     class FlightSimulatorViewModel : IViewModel
     {
         private IModel model;
+        private string learnFile;
 
         private PlotModel currCategoryPM;
         public PlotModel VM_CurrCategoryPM
@@ -49,9 +52,9 @@ namespace AP2_1
 
 
             model.notifyPropertyChanged += (object sender, EventArgs e) => {
-                if (e as CSVFileUploadEventArgs != null)
+                if (e as CSVAnomaliesFileUploadEventArgs != null)
                 {
-                    CSVFileUploadEventArgs args = e as CSVFileUploadEventArgs;
+                    CSVAnomaliesFileUploadEventArgs args = e as CSVAnomaliesFileUploadEventArgs;
                     if (args.Info == PropertyChangedEventArgs.InfoVal.FileUpdated)
                     {
                         notifyPropertyChanged(this, args);
@@ -90,32 +93,6 @@ namespace AP2_1
         {
             var data = model.GetRelevantData();
             if (data == null) return;
-            /*
-            currCategoryPM.Axes.Clear();
-            var xAxes = new LinearAxis
-            {
-                Title = "Time",
-                Minimum = -5,
-                Maximum = 35,
-                Position = AxisPosition.Bottom
-            };
-            currCategoryPM.Axes.Add(xAxes);
-
-            var yAxes = new LinearAxis()
-            {
-                Title = model.GetCurrentCategory(),
-                Minimum = model.GetCurrentCategoryMinimum() - 5,
-                Maximum = model.GetCurrentCategoryMaximum() + 5,
-                Position = AxisPosition.Left
-            };
-            currCategoryPM.Axes.Add(yAxes);
-            ScatterSeries series = new ScatterSeries
-            {
-                MarkerType = MarkerType.Circle
-            };
-            */
-
-            
 
             currCategoryPM?.Series?.Clear();
             List<ScatterPoint> points = new List<ScatterPoint>();
@@ -130,33 +107,16 @@ namespace AP2_1
                 MarkerType = MarkerType.Circle,
                 MarkerFill = OxyColor.FromRgb(0, 0, 55)
             });
-            /*
-            if (currCategoryPM.Series.Count > 0)
-            {
-                var series = currCategoryPM.Series.ElementAt(0) as ScatterSeries;
-                if (series != null && series.Points.Count > 0)
-                {
-                    // series.Points.RemoveAt(0);
-                    series.Points.Add(new ScatterPoint(data.Count, data.ElementAt(data.Count)));
-                }
-            }
+        }
 
-
-
-            List<ScatterPoint> points = new List<ScatterPoint>();
-            for (int i = 0; i < data.Count; ++i)
-            {
-                points.Add(new ScatterPoint(i, data.ElementAt(i)));
-            }
-            series.ItemsSource = points;
-
-            currCategoryPM.Series.Add(series);
-            */
-        } 
-
-        public void UploadFile(string pathCSV, string pathXML)
+        public void UploadFile(string pathCSVAnomalies, string pathXML, string pathCSVLearn)
         {
-            model.UploadFile(pathCSV, pathXML);
+            // learn and detect anomalies
+            detectAnomaliesAndSetResults(pathCSVAnomalies);
+            
+
+            model.UploadFile(pathCSVAnomalies, pathXML);
+            learnFile = pathCSVLearn;
         }
 
         public void SetPause(bool pause)
@@ -185,15 +145,74 @@ namespace AP2_1
             if (currCategoryPM.Axes.Count > 1)
             {
                 var yAxis = currCategoryPM.Axes.ElementAt(1);
-                yAxis.Minimum = model.GetCurrentCategoryMinimum() - 5;
-                yAxis.Maximum = model.GetCurrentCategoryMaximum() + 5;
-                yAxis.Title = model.GetCurrentCategory();
+                yAxis.Minimum = model.GetCategoryMinimum(category) - 5;
+                yAxis.Maximum = model.GetCategoryMaximum(category) + 5;
+                yAxis.Title = category;
             }
+        }
+
+        public void SetLibrary(string path)
+        {
+            // libraryPath = path;
+            File.Copy(path, LIBRARY_PATH);
         }
 
         public void Exit()
         {
             model.Exit();
+        }
+
+        /*
+         Wrapper and DLL shit from here
+         */
+        private const string LIBRARY_PATH = "AnomaliesLibrary.dll";
+        [DllImport(LIBRARY_PATH, CallingConvention = CallingConvention.Cdecl)]
+        public static extern IntPtr detectAnomalis(IntPtr trainFile, IntPtr testFile);
+        [DllImport(LIBRARY_PATH, CallingConvention = CallingConvention.Cdecl)]
+        public static extern IntPtr getCorrelateFeatureByFeatureName(IntPtr r, IntPtr name);
+        [DllImport(LIBRARY_PATH, CallingConvention = CallingConvention.Cdecl)]
+        public static extern int isAnomaly(IntPtr r, IntPtr feature, int timeStep);
+        [DllImport(LIBRARY_PATH, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void deleteResults(IntPtr r);
+        [DllImport(LIBRARY_PATH, CallingConvention = CallingConvention.Cdecl)]
+        public static extern IntPtr CreatestringWrapper();
+        [DllImport(LIBRARY_PATH, CallingConvention = CallingConvention.Cdecl)]
+        public static extern int len(IntPtr s);
+        [DllImport(LIBRARY_PATH, CallingConvention = CallingConvention.Cdecl)]
+        public static extern char getCharByIndex(IntPtr s, int x);
+        [DllImport(LIBRARY_PATH, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void addChar(IntPtr s, char c);
+        [DllImport(LIBRARY_PATH, CallingConvention = CallingConvention.Cdecl)]
+        public static extern void removeStr(IntPtr s);
+        public static string GetStr(IntPtr s)
+        {
+            int l = len(s);
+            string str = "";
+            for (int i = 0; i < l; ++i)
+            {
+                str += getCharByIndex(s, i).ToString();
+            }
+            return str;
+        }
+        public static IntPtr CreateStringWrapperFromString(string str)
+        {
+            IntPtr s = CreatestringWrapper();
+            foreach (char c in str)
+            {
+                addChar(s, c);
+            }
+            return s;
+        }
+
+        private IntPtr results;
+        private Dictionary<string, string> correlatedProperties;
+        
+        private void detectAnomaliesAndSetResults(string pathCSVAnomalies)
+        {
+            IntPtr train = CreateStringWrapperFromString(learnFile), test = CreateStringWrapperFromString(pathCSVAnomalies);
+            results = detectAnomalis(train, test);
+            removeStr(train);
+            removeStr(test);
         }
     }
 }
