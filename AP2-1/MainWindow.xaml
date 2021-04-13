@@ -109,6 +109,7 @@
                 </MenuItem>
             </Menu>
         </Canvas>
-        <oxy:PlotView x:Name="CurrCategoryPlot" Model="{Binding VM_CurrCategoryPM}" Margin="182,56,429,190"></oxy:PlotView>
+        <oxy:PlotView x:Name="CurrCategoryPlot" Model="{Binding VM_CurrCategoryPM}" Margin="34,51,577,195"/>
+        <oxy:PlotView x:Name="CurrCorrelatedCategoryPlot" Model="{Binding VM_CurrCorrelatedCategoryPM}" Margin="260,51,351,195"/>
     </Grid>
 </Window>

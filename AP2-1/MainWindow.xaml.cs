@@ -71,6 +71,8 @@ namespace AP2_1
             SetPluginsDir();
             vm = new FlightSimulatorViewModel(new FlightSimulatorModel());
             CurrCategoryPlot.DataContext = vm;
+            CurrCorrelatedCategoryPlot.DataContext = vm;
+            File.Copy(PLUGINS_DIR + "/LinearRegression.dll", vm.GetLibrary(), true);
 
             CompositionTarget.Rendering += CompositionTarget_Rendering;
 
@@ -157,6 +159,10 @@ namespace AP2_1
             if (CurrCategoryPlot?.Model?.Series != null)
             {
                 CurrCategoryPlot.InvalidatePlot(true);
+            }
+            if (CurrCorrelatedCategoryPlot?.Model?.Series != null)
+            {
+                CurrCorrelatedCategoryPlot.InvalidatePlot(true);
             }
         }
 

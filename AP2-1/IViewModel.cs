@@ -16,6 +16,7 @@ namespace AP2_1
         void SetSpeed(double speed);
         void SetCurrentCategory(string category);
         void SetLibrary(string path);
+        string GetLibrary();
         void UpdateGraph();
         void Exit();
     }

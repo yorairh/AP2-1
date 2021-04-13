@@ -28,11 +28,25 @@ namespace AP2_1
                 currCategoryPM = value;
             }
         }
+        private PlotModel currCorrelatedCategoryPM;
+        public PlotModel VM_CurrCorrelatedCategoryPM
+        {
+            get
+            {
+                return currCorrelatedCategoryPM;
+            }
+            set
+            {
+                currCorrelatedCategoryPM = value;
+            }
+        }
+        
 
         public event propertyChanged notifyPropertyChanged;
 
         public FlightSimulatorViewModel(IModel model)
         {
+            results = IntPtr.Zero;
             this.model = model;
             this.currCategoryPM = new PlotModel();
             currCategoryPM.Axes.Add(new LinearAxis
@@ -43,6 +57,22 @@ namespace AP2_1
                 Position = AxisPosition.Bottom
             });
             currCategoryPM.Axes.Add(new LinearAxis
+            {
+                Title = "",
+                Minimum = 0,
+                Maximum = 0,
+                Position = AxisPosition.Left
+            });
+
+            this.VM_CurrCorrelatedCategoryPM = new PlotModel();
+            VM_CurrCorrelatedCategoryPM.Axes.Add(new LinearAxis
+            {
+                Title = "Time",
+                Minimum = -5,
+                Maximum = 35,
+                Position = AxisPosition.Bottom
+            });
+            VM_CurrCorrelatedCategoryPM.Axes.Add(new LinearAxis
             {
                 Title = "",
                 Minimum = 0,
@@ -89,78 +119,6 @@ namespace AP2_1
             };
         }
 
-        public void UpdateGraph()
-        {
-            var data = model.GetRelevantData();
-            if (data == null) return;
-
-            currCategoryPM?.Series?.Clear();
-            List<ScatterPoint> points = new List<ScatterPoint>();
-            for (int i = 0; i < data.Count; ++i)
-            {
-                points.Add(new ScatterPoint(i, data.ElementAt(i)));
-            }
-            currCategoryPM?.Series?.Add(new ScatterSeries
-            {
-                ItemsSource = points,
-                MarkerSize = 2,
-                MarkerType = MarkerType.Circle,
-                MarkerFill = OxyColor.FromRgb(0, 0, 55)
-            });
-        }
-
-        public void UploadFile(string pathCSVAnomalies, string pathXML, string pathCSVLearn)
-        {
-            // learn and detect anomalies
-            detectAnomaliesAndSetResults(pathCSVAnomalies);
-            
-
-            model.UploadFile(pathCSVAnomalies, pathXML);
-            learnFile = pathCSVLearn;
-        }
-
-        public void SetPause(bool pause)
-        {
-            model.SetPause(pause);
-        }
-
-        public void Jump(int val)
-        {
-            model.Jump(val);
-        }
-
-        public void SetTime(int time)
-        {
-            model.SetTime(time);
-        }
-
-        public void SetSpeed(double speed)
-        {
-            model.SetSpeed(speed);
-        }
-
-        public void SetCurrentCategory(string category)
-        {
-            model.SetCurrentCategory(category);
-            if (currCategoryPM.Axes.Count > 1)
-            {
-                var yAxis = currCategoryPM.Axes.ElementAt(1);
-                yAxis.Minimum = model.GetCategoryMinimum(category) - 5;
-                yAxis.Maximum = model.GetCategoryMaximum(category) + 5;
-                yAxis.Title = category;
-            }
-        }
-
-        public void SetLibrary(string path)
-        {
-            // libraryPath = path;
-            File.Copy(path, LIBRARY_PATH);
-        }
-
-        public void Exit()
-        {
-            model.Exit();
-        }
 
         /*
          Wrapper and DLL shit from here
@@ -205,8 +163,7 @@ namespace AP2_1
         }
 
         private IntPtr results;
-        private Dictionary<string, string> correlatedProperties;
-        
+
         private void detectAnomaliesAndSetResults(string pathCSVAnomalies)
         {
             IntPtr train = CreateStringWrapperFromString(learnFile), test = CreateStringWrapperFromString(pathCSVAnomalies);
@@ -214,5 +171,127 @@ namespace AP2_1
             removeStr(train);
             removeStr(test);
         }
+
+        private string GetCorrelatedFeature(string feature)
+        {
+            if (results == IntPtr.Zero) return null;
+            IntPtr f = CreateStringWrapperFromString(feature);
+            IntPtr corr = getCorrelateFeatureByFeatureName(results, f);
+            string corrStr = GetStr(corr);
+            removeStr(corr);
+            removeStr(f);
+            return corrStr;
+        }
+
+
+        /*
+         end of this
+         */
+
+        public void UpdateGraph()
+        {
+            var data = model.GetRelevantDataByFeature(model.GetCurrentCategory());
+            if (data == null) return;
+
+            VM_CurrCategoryPM?.Series?.Clear();
+            List<ScatterPoint> points = new List<ScatterPoint>();
+            for (int i = 0; i < data.Count; ++i)
+            {
+                points.Add(new ScatterPoint(i, data.ElementAt(i)));
+            }
+            VM_CurrCategoryPM?.Series?.Add(new ScatterSeries
+            {
+                ItemsSource = points,
+                MarkerSize = 2,
+                MarkerType = MarkerType.Circle,
+                MarkerFill = OxyColor.FromRgb(0, 0, 55)
+            });
+
+            var corrData = model.GetRelevantDataByFeature(GetCorrelatedFeature(model.GetCurrentCategory()));
+            if (corrData == null) return;
+            VM_CurrCorrelatedCategoryPM?.Series?.Clear();
+            List<ScatterPoint> corrPoints = new List<ScatterPoint>();
+            int timeStep = model.GetCurrentTimeStep();
+            for (int i = 0; i < data.Count; ++i)
+            {
+                corrPoints.Add(new ScatterPoint(i, corrData.ElementAt(i)));
+            }
+            VM_CurrCorrelatedCategoryPM?.Series?.Add(new ScatterSeries
+            {
+                ItemsSource = corrPoints,
+                MarkerSize = 2,
+                MarkerType = MarkerType.Circle,
+                MarkerFill = OxyColor.FromRgb(0, 0, 55)
+            });
+        }
+
+        public void UploadFile(string pathCSVAnomalies, string pathXML, string pathCSVLearn)
+        {
+            // learn and detect anomalies
+            learnFile = pathCSVLearn;
+            detectAnomaliesAndSetResults(pathCSVAnomalies);
+            
+
+            model.UploadFile(pathCSVAnomalies, pathXML);
+        }
+
+        public void SetPause(bool pause)
+        {
+            model.SetPause(pause);
+        }
+
+        public void Jump(int val)
+        {
+            model.Jump(val);
+        }
+
+        public void SetTime(int time)
+        {
+            model.SetTime(time);
+        }
+
+        public void SetSpeed(double speed)
+        {
+            model.SetSpeed(speed);
+        }
+
+        public void SetCurrentCategory(string category)
+        {
+            model.SetCurrentCategory(category);
+            if (currCategoryPM.Axes.Count > 1)
+            {
+                var yAxis = currCategoryPM.Axes.ElementAt(1);
+                yAxis.Minimum = model.GetCategoryMinimum(category) - 5;
+                yAxis.Maximum = model.GetCategoryMaximum(category) + 5;
+                yAxis.Title = category;
+            }
+            if (currCorrelatedCategoryPM.Axes.Count > 1)
+            {
+                var yAxis = currCorrelatedCategoryPM.Axes.ElementAt(1);
+                string corrFeat = GetCorrelatedFeature(category);
+                yAxis.Minimum = model.GetCategoryMinimum(corrFeat) - 5;
+                yAxis.Maximum = model.GetCategoryMaximum(corrFeat) + 5;
+                yAxis.Title = corrFeat;
+            }
+            // currCorrelatedCategoryPM
+        }
+
+        public void SetLibrary(string path)
+        {
+            // libraryPath = path;
+            File.Copy(path, LIBRARY_PATH);
+        }
+
+        public string GetLibrary()
+        {
+            return LIBRARY_PATH;
+        }
+
+        public void Exit()
+        {
+            model.Exit();
+        }
+
+        
     }
 }

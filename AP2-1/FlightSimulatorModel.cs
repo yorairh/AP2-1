@@ -118,7 +118,7 @@ namespace AP2_1
             }
 
             // upload the CSV file
-            fileData = File.ReadAllLines(pathCSVAnomalies);
+            fileData = File.ReadAllLines(pathCSVAnomalies).Skip(1).ToArray(); // skip the headlines
             //upload the XML file
             categories = new List<string>();
             
@@ -149,23 +149,23 @@ namespace AP2_1
             sendFileThread.Start(this);
         }
 
-        public List<float> GetRelevantData()
+        public List<float> GetRelevantDataByFeature(string category)
         {
-            if (currentCategory == null) return null;
+            if (categories == null || !categories.Contains(category)) return null;
             int currIndex;
             lock (indexLock)
             {
                 currIndex = index;
             }
-            int firstIndex = (currIndex - 29 < 0 ? 0 : currIndex - 29);
             List<float> relData = new List<float>();
             if (currIndex >= fileData.Length)
             {
                 currIndex = fileData.Length - 1;
             }
+            int firstIndex = (currIndex - 29 < 0 ? 0 : currIndex - 29);
             for (int i = firstIndex; i <= currIndex; ++i)
             {
-                relData.Add(float.Parse(fileData[i].Split(',')[categories.IndexOf(currentCategory)], CultureInfo.InvariantCulture.NumberFormat));
+                relData.Add(float.Parse(fileData[i].Split(',')[categories.IndexOf(category)], CultureInfo.InvariantCulture.NumberFormat));
             }
             return relData;
         }
@@ -222,6 +222,16 @@ namespace AP2_1
         public void SetCurrentCategory(string category)
         {
             this.currentCategory = (category == "Choose property" ? null : category);
+        }
+
+        public int GetCurrentTimeStep()
+        {
+            int res;
+            lock(indexLock)
+            {
+                res = index;
+            }
+            return res;
         }
 
         public void Exit()
