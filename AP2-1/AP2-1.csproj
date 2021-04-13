@@ -133,9 +133,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="plugins\LinearRegression.dll" />
+    <Content Include="plugins\StringWrapper.dll" />
     <Resource Include="joystick.png" />
     <Content Include="plugins\InnerCircle.dll" />
-    <Content Include="plugins\LinearRegression.dll" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.7.2">

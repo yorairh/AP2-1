@@ -3,6 +3,7 @@ using OxyPlot.Axes;
 using OxyPlot.Series;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -15,6 +16,8 @@ namespace AP2_1
     {
         private IModel model;
         private string learnFile;
+        Dictionary<string, List<float>> learnedData;
+        private FunctionSeries regLine;
 
         private PlotModel currCategoryPM;
         public PlotModel VM_CurrCategoryPM
@@ -60,6 +63,7 @@ namespace AP2_1
 
         public FlightSimulatorViewModel(IModel model)
         {
+            learnedData = new Dictionary<string, List<float>>();
             results = IntPtr.Zero;
             this.model = model;
             this.currCategoryPM = new PlotModel();
@@ -68,14 +72,16 @@ namespace AP2_1
                 Title = "Time",
                 Minimum = -5,
                 Maximum = 35,
-                Position = AxisPosition.Bottom
+                Position = AxisPosition.Bottom,
+                IsZoomEnabled = false
             });
             currCategoryPM.Axes.Add(new LinearAxis
             {
                 Title = "",
                 Minimum = 0,
                 Maximum = 0,
-                Position = AxisPosition.Left
+                Position = AxisPosition.Left,
+                IsZoomEnabled = false
             });
 
             this.VM_CurrCorrelatedCategoryPM = new PlotModel();
@@ -84,14 +90,16 @@ namespace AP2_1
                 Title = "Time",
                 Minimum = -5,
                 Maximum = 35,
-                Position = AxisPosition.Bottom
+                Position = AxisPosition.Bottom,
+                IsZoomEnabled = false
             });
             VM_CurrCorrelatedCategoryPM.Axes.Add(new LinearAxis
             {
                 Title = "",
                 Minimum = 0,
                 Maximum = 0,
-                Position = AxisPosition.Left
+                Position = AxisPosition.Left,
+                IsZoomEnabled = false
             });
 
             this.VM_CorrelatedAsFuncOfCurrent = new PlotModel();
@@ -100,14 +108,16 @@ namespace AP2_1
                 Title = "",
                 Minimum = 0,
                 Maximum = 0,
-                Position = AxisPosition.Bottom
+                Position = AxisPosition.Bottom,
+                IsZoomEnabled = false
             });
             VM_CorrelatedAsFuncOfCurrent.Axes.Add(new LinearAxis
             {
                 Title = "",
                 Minimum = 0,
                 Maximum = 0,
-                Position = AxisPosition.Left
+                Position = AxisPosition.Left,
+                IsZoomEnabled = false
             });
 
             model.notifyPropertyChanged += (object sender, EventArgs e) => {
@@ -161,15 +171,21 @@ namespace AP2_1
         public static extern int isAnomaly(IntPtr r, IntPtr feature, int timeStep);
         [DllImport(LIBRARY_PATH, CallingConvention = CallingConvention.Cdecl)]
         public static extern void deleteResults(IntPtr r);
-        [DllImport(LIBRARY_PATH, CallingConvention = CallingConvention.Cdecl)]
+        private const string LINEAR_LIBRARY_PATH = "LinearRegression.dll";
+        [DllImport(LINEAR_LIBRARY_PATH, CallingConvention = CallingConvention.Cdecl)]
+        public static extern float getSlope(IntPtr r, IntPtr feature);
+        [DllImport(LINEAR_LIBRARY_PATH, CallingConvention = CallingConvention.Cdecl)]
+        public static extern float getYIntercept(IntPtr r, IntPtr feature);
+        private const string STRING_LIBRARY_PATH = "StringWrapper.dll";
+        [DllImport(STRING_LIBRARY_PATH, CallingConvention = CallingConvention.Cdecl)]
         public static extern IntPtr CreatestringWrapper();
-        [DllImport(LIBRARY_PATH, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(STRING_LIBRARY_PATH, CallingConvention = CallingConvention.Cdecl)]
         public static extern int len(IntPtr s);
-        [DllImport(LIBRARY_PATH, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(STRING_LIBRARY_PATH, CallingConvention = CallingConvention.Cdecl)]
         public static extern char getCharByIndex(IntPtr s, int x);
-        [DllImport(LIBRARY_PATH, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(STRING_LIBRARY_PATH, CallingConvention = CallingConvention.Cdecl)]
         public static extern void addChar(IntPtr s, char c);
-        [DllImport(LIBRARY_PATH, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(STRING_LIBRARY_PATH, CallingConvention = CallingConvention.Cdecl)]
         public static extern void removeStr(IntPtr s);
         public static string GetStr(IntPtr s)
         {
@@ -258,7 +274,7 @@ namespace AP2_1
             {
                 scatterPoints.Add(new ScatterPoint(data[i], corrData[i]));
             }
-
+            VM_CorrelatedAsFuncOfCurrent?.Series?.Add(regLine);
             VM_CorrelatedAsFuncOfCurrent?.Series.Add(new ScatterSeries
             {
                 ItemsSource = scatterPoints,
@@ -273,7 +289,6 @@ namespace AP2_1
             // learn and detect anomalies
             learnFile = pathCSVLearn;
             detectAnomaliesAndSetResults(pathCSVAnomalies);
-
             model.UploadFile(pathCSVAnomalies, pathXML);
         }
 
@@ -327,6 +342,14 @@ namespace AP2_1
                 yAxis.Minimum = model.GetCategoryMinimum(corrFeat) - 5;
                 yAxis.Maximum = model.GetCategoryMaximum(corrFeat) + 5;
                 yAxis.Title = corrFeat;
+                float a, b;
+                var feature = CreateStringWrapperFromString(category);
+                a = getSlope(results, feature);
+                b = getYIntercept(results, feature);
+                removeStr(feature);
+                regLine = new FunctionSeries((double x) => a * x + b, xAxis.Minimum, xAxis.Maximum, 0.1);
+                // Line reg = LinearRegressionCalculator.CalculateLineRegression(learnedData[category], learnedData[GetCorrelatedFeature(category)]);
+                // regLine = new FunctionSeries((double x) => reg.Slope * x + reg.YIntercept, xAxis.Minimum, xAxis.Maximum, 0.0001);
             }
             // currCorrelatedCategoryPM
         }

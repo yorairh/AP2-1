@@ -55,7 +55,8 @@ namespace AP2_1
         {
             foreach (string file in Directory.GetFiles(PLUGINS_DIR))
             {
-                if (Path.GetFileName(file) != "InnerCircle.dll" && Path.GetFileName(file) != "LinearRegression.dll")
+                var f = Path.GetFileName(file);
+                if (f != "InnerCircle.dll" && f != "LinearRegression.dll" && f != "StringWrapper.dll")
                 {
                     File.Delete(file);
                 }
@@ -74,6 +75,8 @@ namespace AP2_1
             CurrCorrelatedCategoryPlot.DataContext = vm;
             CorrelatedAsFuncOfCurrent.DataContext = vm;
             File.Copy(PLUGINS_DIR + "/LinearRegression.dll", vm.GetLibrary(), true);
+            File.Copy(PLUGINS_DIR + "/LinearRegression.dll", "LinearRegression.dll", true);
+            File.Copy(PLUGINS_DIR + "/StringWrapper.dll", "StringWrapper.dll", true);
 
             CompositionTarget.Rendering += CompositionTarget_Rendering;
 
