@@ -12,5 +12,6 @@ namespace AP2_1
         void SetTime(int time);
         void Jump(int val);
         void SetSpeed(double speed);
+        void UpdateTime();
     }
 }

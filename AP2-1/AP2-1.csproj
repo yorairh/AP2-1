@@ -82,7 +82,11 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Anomaly.cs" />
+    <Compile Include="FlightDataModel.cs" />
+    <Compile Include="FlightDataViewModel.cs" />
     <Compile Include="GraphViewModel.cs" />
+    <Compile Include="IFlightDataModel.cs" />
+    <Compile Include="IFlightDataViewModel.cs" />
     <Compile Include="IGraphModel.cs" />
     <Compile Include="IGraphViewModel.cs" />
     <Compile Include="IMainModel.cs" />
@@ -91,7 +95,7 @@
     <Compile Include="GraphModel.cs" />
     <Compile Include="ITimeManagerModel.cs" />
     <Compile Include="ITimeManagerViewModel.cs" />
-    <Compile Include="LibraryManger.cs" />
+    <Compile Include="LibraryManager.cs" />
     <Compile Include="MainModel.cs" />
     <Compile Include="MainViewModel.cs" />
     <Compile Include="StringWrapper.cs" />
@@ -112,9 +116,7 @@
     <Compile Include="INotifyPropertyChanged.cs" />
     <Compile Include="IView.cs" />
     <Compile Include="IViewModel.cs" />
-    <Compile Include="FlightSimulatorModel.cs" />
     <Compile Include="PropertyChangedEventArgs.cs" />
-    <Compile Include="FlightSimulatorViewModel.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>

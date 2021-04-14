@@ -27,6 +27,22 @@ namespace AP2_1
         private object indexLock;
         private string currentCategory;
         private IGraphModel graphModel;
+        private IFlightDataModel flightDataModel;
+        private ITimeManagerModel timeManagerModel;
+
+        public void SetGraphModel(IGraphModel model)
+        {
+            this.graphModel = model;
+        }
+
+        public void SetFlightDataModel(IFlightDataModel model)
+        {
+            this.flightDataModel = model;
+        }
+        public void SetTimeManagerModel(ITimeManagerModel model)
+        {
+            this.timeManagerModel = model;
+        }
 
         public string LearnFile { get; set; }
         public bool Pause {
@@ -36,7 +52,15 @@ namespace AP2_1
             }
             set
             {
-                pause = value;
+                if (!value && sendFileThread != null && !sendFileThread.IsAlive)
+                {
+                    sendFileThread.Abort();
+                    StartThread();
+                } 
+                else
+                {
+                    pause = value;
+                }
             }
         }
 
@@ -72,9 +96,16 @@ namespace AP2_1
 
         public event propertyChanged notifyPropertyChanged;
 
-        public MainModel(IGraphModel model)
+        public MainModel()
         {
-            graphModel = model;
+            indexLock = new object();
+        }
+
+        public MainModel(IGraphModel graphModel, IFlightDataModel flightDataModel, ITimeManagerModel timeManagerModel)
+        {
+            this.graphModel = graphModel;
+            this.flightDataModel = flightDataModel;
+            this.timeManagerModel = timeManagerModel;
             indexLock = new object();
         }
 
@@ -85,6 +116,7 @@ namespace AP2_1
                 sendFileThread.Abort();
                 sendFileThread = null;
             }
+            LearnFile = pathCSVLearn;
             graphModel.DetectAnomaliesAndSetResults(pathCSVAnomalies);
 
             // upload the CSV file
@@ -110,11 +142,16 @@ namespace AP2_1
             notifyPropertyChanged(this, new CSVAnomaliesFileUploadEventArgs(PropertyChangedEventArgs.InfoVal.FileUpdated, fileData.Length));
             notifyPropertyChanged(this, new XMLFileUploadEventArgs(PropertyChangedEventArgs.InfoVal.FileUpdated, categories));
 
-            // create the thread uploading the file lines
-            index = 0;
-            pause = false;
+            Index = 0;
             sendingSpeed = 1;
+            StartThread();
+        }
 
+        private void StartThread()
+        {
+            // create the thread uploading the file lines
+            pause = false;
+            
             sendFileThread = new Thread(SendFile);
             sendFileThread.Start(this);
         }
@@ -126,48 +163,34 @@ namespace AP2_1
             {
                 return;
             }
-            int currIndex;
-            lock (arg.indexLock)
-            {
-                currIndex = arg.index;
-            }
-            while (currIndex < arg.fileData.Length)
+            while (Index < arg.fileData.Length)
             {
                 if (!arg.pause)
                 {
                     // send fileData[index]
 
-                    lock (arg.indexLock)
-                    {
-                        ++arg.index;
-                        string[] currData = fileData[currIndex].Split(',');
-                        float aileron = float.Parse(currData[categories.IndexOf("aileron")], CultureInfo.InvariantCulture.NumberFormat);
-                        float elevator = float.Parse(currData[categories.IndexOf("elevator")], CultureInfo.InvariantCulture.NumberFormat);
-                        float rudder = float.Parse(currData[categories.IndexOf("rudder")], CultureInfo.InvariantCulture.NumberFormat);
-                        float throttle = float.Parse(currData[categories.IndexOf("throttle")], CultureInfo.InvariantCulture.NumberFormat);
-                        float altimeter = float.Parse(currData[categories.IndexOf("altitude-ft")], CultureInfo.InvariantCulture.NumberFormat);
-                        float airSpeed = float.Parse(currData[categories.IndexOf("airspeed-kt")], CultureInfo.InvariantCulture.NumberFormat);
-                        float orientation = float.Parse(currData[categories.IndexOf("heading-deg")], CultureInfo.InvariantCulture.NumberFormat);
-                        float roll = float.Parse(currData[categories.IndexOf("roll-deg")], CultureInfo.InvariantCulture.NumberFormat);
-                        float pitch = float.Parse(currData[categories.IndexOf("pitch-deg")], CultureInfo.InvariantCulture.NumberFormat);
-                        float yaw = float.Parse(currData[categories.IndexOf("side-slip-deg")], CultureInfo.InvariantCulture.NumberFormat);
-                        float[] info = { aileron, elevator, rudder, throttle, altimeter, airSpeed, orientation, roll, pitch, yaw };
-                        arg.notifyPropertyChanged(arg, new InformationChangedEventArgs(PropertyChangedEventArgs.InfoVal.InfoChanged, info));
-                        string newTime = TimeFormat(arg.index / 10);
-                        arg.notifyPropertyChanged(arg, new TimeChangedEventArgs(PropertyChangedEventArgs.InfoVal.TimeChanged, newTime, arg.index));
-                    }
-                    Thread.Sleep((int)(100 / arg.sendingSpeed));
-                }
-                lock (arg.indexLock)
-                {
-                    currIndex = arg.index;
+                    ++Index;
+                    flightDataModel.UpdateData();
+                    timeManagerModel.UpdateTime();
+                    Thread.Sleep((int)(100 / arg.SendingSpeed));
                 }
             }
+        }
+
+        public float? GetValueByCategory(string category)
+        {
+            if (Index < fileData.Length)
+            {
+                string[] currData = fileData[Index].Split(',');
+                return float.Parse(currData[categories.IndexOf(category)], CultureInfo.InvariantCulture.NumberFormat);
+            }
+            return null;
         }
 
         public void SetCurrentCategory(string category)
         {
             this.currentCategory = (category == "Choose property" ? null : category);
+            graphModel.UpdateAxes();
         }
 
         public List<float> GetRelevantDataByFeature(string category)
@@ -197,13 +220,6 @@ namespace AP2_1
             {
                 sendFileThread.Abort();
             }
-        }
-
-        private static string TimeFormat(int seconds)
-        {
-            int h = seconds / 3600, m = (seconds - 3600 * h) / 60, s = seconds - 3600 * h - m * 60;
-            DateTime dt = new DateTime(1, 1, 1, h, m, s); // the date doesn't matter
-            return dt.ToString("HH:mm:ss");
         }
 
         private void SetMinimumAndMaximum()

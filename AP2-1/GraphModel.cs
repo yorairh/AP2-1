@@ -76,34 +76,85 @@ namespace AP2_1
                 Position = AxisPosition.Left,
                 IsZoomEnabled = false
             });
+
+            AnomaliesData = new List<Anomaly>();
         }
 
         private List<Anomaly> anomalies;
 
         private void SetAnomalies(IntPtr results)
         {
-            AnomaliesData.Clear();
+            AnomaliesData?.Clear();
             anomalies = new List<Anomaly>();
-            int len = LibraryManger.anomaliesLen(results);
+            int len = LibraryManager.anomaliesLen(results);
             for (int i = 0; i < len; ++i)
             {
-                IntPtr desc = LibraryManger.getAnomalyDescription(results, i);
-                int timeStep = LibraryManger.getAnomalyTimeStep(results, i);
+                IntPtr desc = LibraryManager.getAnomalyDescription(results, i);
+                int timeStep = LibraryManager.getAnomalyTimeStep(results, i);
                 anomalies.Add(new Anomaly(timeStep, StringWrapper.GetStr(desc)));
                 // VM_AnomaliesData.Add(new Anomaly(timeStep, GetStr(desc)));
                 StringWrapper.removeStr(desc);
             }
         }
 
-        private void DetectAnomaliesAndSetResults(string pathCSVAnomalies)
+        public void UpdateAxes()
+        {
+            string category = mainModel.GetCurrentCategory();
+            if (CurrCategoryPM.Axes.Count > 1)
+            {
+                var yAxis = CurrCategoryPM.Axes.ElementAt(1);
+                yAxis.Minimum = mainModel.GetCategoryMinimum(category) - 5;
+                yAxis.Maximum = mainModel.GetCategoryMaximum(category) + 5;
+                yAxis.Title = category;
+            }
+            if (CurrCorrelatedCategoryPM.Axes.Count > 1)
+            {
+                var yAxis = CurrCorrelatedCategoryPM.Axes.ElementAt(1);
+                string corrFeat = GetCorrelatedFeature(category);
+                yAxis.Minimum = mainModel.GetCategoryMinimum(corrFeat) - 5;
+                yAxis.Maximum = mainModel.GetCategoryMaximum(corrFeat) + 5;
+                yAxis.Title = corrFeat;
+            }
+            if (CorrelatedAsFuncOfCurrent.Axes.Count > 1)
+            {
+                var xAxis = CorrelatedAsFuncOfCurrent.Axes.ElementAt(0);
+                xAxis.Minimum = mainModel.GetCategoryMinimum(category) - 5;
+                xAxis.Maximum = mainModel.GetCategoryMaximum(category) + 5;
+                xAxis.Title = category;
+
+                var yAxis = CorrelatedAsFuncOfCurrent.Axes.ElementAt(1);
+                string corrFeat = GetCorrelatedFeature(category);
+                yAxis.Minimum = mainModel.GetCategoryMinimum(corrFeat) - 5;
+                yAxis.Maximum = mainModel.GetCategoryMaximum(corrFeat) + 5;
+                yAxis.Title = corrFeat;
+                float a, b;
+                var feature = StringWrapper.CreateStringWrapperFromString(category);
+                a = LibraryManager.getSlope(Results, feature);
+                b = LibraryManager.getYIntercept(Results, feature);
+                StringWrapper.removeStr(feature);
+                regLine = new FunctionSeries((double x) => a * x + b, xAxis.Minimum, xAxis.Maximum, 0.1);
+                // Line reg = LinearRegressionCalculator.CalculateLineRegression(learnedData[category], learnedData[GetCorrelatedFeature(category)]);
+                // regLine = new FunctionSeries((double x) => reg.Slope * x + reg.YIntercept, xAxis.Minimum, xAxis.Maximum, 0.0001);
+            }
+
+            AnomaliesData?.Clear();
+            foreach (Anomaly a in anomalies)
+            {
+                if (a.GetFeature1() == category)
+                {
+                    AnomaliesData.Add(a);
+                }
+            }
+        }
+        public void DetectAnomaliesAndSetResults(string pathCSVAnomalies)
         {
             if (Results != IntPtr.Zero)
             {
-                LibraryManger.deleteResults(Results);
+                LibraryManager.deleteResults(Results);
                 Results = IntPtr.Zero;
             }
             IntPtr train = StringWrapper.CreateStringWrapperFromString(mainModel.LearnFile), test = StringWrapper.CreateStringWrapperFromString(pathCSVAnomalies);
-            Results = LibraryManger.detectAnomalis(train, test);
+            Results = LibraryManager.detectAnomalis(train, test);
             SetAnomalies(Results);
             StringWrapper.removeStr(train);
             StringWrapper.removeStr(test);
@@ -113,7 +164,7 @@ namespace AP2_1
         {
             if (Results == IntPtr.Zero) return null;
             IntPtr f = StringWrapper.CreateStringWrapperFromString(feature);
-            IntPtr corr = LibraryManger.getCorrelateFeatureByFeatureName(Results, f);
+            IntPtr corr = LibraryManager.getCorrelateFeatureByFeatureName(Results, f);
             string corrStr = StringWrapper.GetStr(corr);
             StringWrapper.removeStr(corr);
             StringWrapper.removeStr(f);

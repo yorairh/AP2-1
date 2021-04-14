@@ -8,7 +8,7 @@
         mc:Ignorable="d"
         Title="Flight Simulator" Height="600" Width="1200" Closing="Window_Closing">
     <Grid Background="#FFD9DCCE">
-        <Button x:Name="btnUpload" Content="Upload" HorizontalAlignment="Left" Margin="953,422,0,0" VerticalAlignment="Top" Width="200" Click="Upload_Click" Visibility="Visible" Height="50"/>
+        <Button x:Name="btnUpload" Content="Upload" HorizontalAlignment="Left" Margin="953,422,0,0" VerticalAlignment="Top" Width="200" Click="Upload_Click" Visibility="Hidden" Height="50"/>
         <Grid HorizontalAlignment="Left" Height="69" Margin="10,480,0,0" VerticalAlignment="Top" Width="1174" Name="gridControl" Visibility="Visible">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1*" />
@@ -29,13 +29,13 @@
             <Button x:Name="btnFastForward" Grid.Column="3" Content=">>" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0" Width="120" Height="25" Click="BtnFastForward_Click"/>
             <Label Grid.Column="4" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="29,-4,29,4" FontSize="20">Play Speed:</Label>
             <Button x:Name="btnMinus" Content="-" Grid.Column="5" HorizontalAlignment="Left" Margin="10,5,0,0" VerticalAlignment="Top" Click="BtnMinus_Click" Width="25" Height="25"/>
-            <TextBox x:Name="tbSpeed"  Text="1.0" Grid.Column="5" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="40,5,0,0" MinWidth="20" Width="30" Height="25" Background="#FFD9DCCE" FontSize="14"/>
+            <TextBox x:Name="tbSpeed" Text="1.0" Grid.Column="5" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="40,5,0,0" MinWidth="20" Width="30" Height="25" Background="#FFD9DCCE" FontSize="14"/>
             <Button x:Name="btnPlus" Content="+" Grid.Column="5" HorizontalAlignment="Left" Margin="75,5,0,0" VerticalAlignment="Top" Width="25" Height="25" Click="BtnPlus_Click"/>
             <Button Name="btnSpeed" Content="OK" Grid.Column="5" HorizontalAlignment="Left" Margin="105,5,0,0" VerticalAlignment="Top" Width="25" Height="25" Click="BtnSpeed_Click"/>
             <TextBlock x:Name="tbTime" Grid.Column="6" HorizontalAlignment="Center" Margin="0,0,0,0" TextWrapping="Wrap" Text="00:00:00" VerticalAlignment="Center" Width="120" Height="25" FontSize="20"/>
             <Slider Name="sldrTime" HorizontalAlignment="Stretch" Margin="0,15,0,0" Grid.Row="1" Grid.ColumnSpan="9" VerticalAlignment="Top" Minimum="0" Thumb.DragStarted="SldrTime_DragStarted" Thumb.DragCompleted="SldrTime_DragCompleted" Foreground="#FFE41C1C" Background="#FFD9DCCE" />
         </Grid>
-        <DataGrid x:Name="AnomaliesTable" ItemsSource="{Binding Path=VM_AnomaliesData}" CanUserResizeColumns="False" HorizontalAlignment="Left" Height="440" Margin="764,28,0,0" VerticalAlignment="Top" Width="Auto" AutoGenerateColumns="True"/>
+        <DataGrid x:Name="AnomaliesTable" ItemsSource="{Binding Path=AnomaliesData}" CanUserResizeColumns="False" HorizontalAlignment="Left" Height="440" Margin="764,28,0,0" VerticalAlignment="Top" Width="Auto" AutoGenerateColumns="True"/>
         <Canvas Name="LayoutInfo" Visibility="Visible" Margin="-4,0,3.6,0.4">
             <Ellipse x:Name ="Joystick" Height="200" Canvas.Left="978" Canvas.Top="23" Width="200" Stroke="Black">
                 <Ellipse.Fill>
@@ -52,9 +52,9 @@
             <Rectangle x:Name="ThrottleLayout" Height="200" Canvas.Left="947" Stroke="#FFB9B2AD" Canvas.Top="23" Width="17" Fill="#FFD9DCCE"/>
             <Rectangle x:Name="ThrottleTracker" Fill="#FFB9B2AD"/>
             <TextBlock Canvas.Left="947" TextWrapping="Wrap" Text="Height:" Canvas.Top="246" Height="24" Width="auto" FontWeight="Bold" Foreground="#FFB9B2AD" FontSize="16"/>
-            <TextBlock x:Name="tbHeight" Canvas.Left="1015" TextWrapping="Wrap" Text="" Height="23" Canvas.Top="246" FontWeight="Bold" Foreground="#FFB9B2AD" FontSize="16"/>
+            <TextBlock x:Name="tbHeight" Text="" Canvas.Left="1015" TextWrapping="Wrap" Height="23" Canvas.Top="246" FontWeight="Bold" Foreground="#FFB9B2AD" FontSize="16"/>
             <TextBlock Canvas.Left="947" TextWrapping="Wrap" Text="Speed:" Canvas.Top="269" Height="23" Width="auto" FontWeight="Bold" Foreground="#FFB9B2AD" FontSize="16"/>
-            <TextBlock x:Name="tbAirSpeed" Canvas.Left="1015" TextWrapping="Wrap" Text="" Height="23" Canvas.Top="269" FontWeight="Bold" Foreground="#FFB9B2AD" FontSize="16"/>
+            <TextBlock x:Name="tbAirSpeed" Text="" Canvas.Left="1015" TextWrapping="Wrap" Height="23" Canvas.Top="269" FontWeight="Bold" Foreground="#FFB9B2AD" FontSize="16"/>
             <TextBlock Canvas.Left="947" TextWrapping="Wrap" Text="ROLL" Canvas.Top="314" Foreground="#FFB9B2AD" Height="21" Width="auto" FontSize="16" RenderTransformOrigin="0.5,-0.121" FontWeight="Bold"/>
             <TextBlock Canvas.Left="1030" TextWrapping="Wrap" Text="PITCH" Canvas.Top="314" Foreground="#FFB9B2AD" Height="21" Width="auto" FontSize="16" RenderTransformOrigin="0.5,-0.121" FontWeight="Bold"/>
             <TextBlock Canvas.Left="1129" TextWrapping="Wrap" Text="YAW" Canvas.Top="314" Foreground="#FFB9B2AD" Height="21" Width="auto" FontSize="16" RenderTransformOrigin="0.5,-0.121" FontWeight="Bold"/>
@@ -65,7 +65,7 @@
                     <TransformGroup>
                         <ScaleTransform/>
                         <SkewTransform/>
-                        <RotateTransform x:Name="angleOfRoll" Angle="0"/>
+                        <RotateTransform x:Name="angleOfRoll"/>
                         <TranslateTransform/>
                     </TransformGroup>
                 </Border.RenderTransform>
@@ -76,7 +76,7 @@
                     <TransformGroup>
                         <ScaleTransform/>
                         <SkewTransform/>
-                        <RotateTransform x:Name="angleOfPitch" Angle="0"/>
+                        <RotateTransform x:Name="angleOfPitch"/>
                         <TranslateTransform/>
                     </TransformGroup>
                 </Border.RenderTransform>
@@ -87,7 +87,7 @@
                     <TransformGroup>
                         <ScaleTransform/>
                         <SkewTransform/>
-                        <RotateTransform x:Name="angleOfYaw" Angle="0"/>
+                        <RotateTransform x:Name="angleOfYaw"/>
                         <TranslateTransform/>
                     </TransformGroup>
                 </Border.RenderTransform>
@@ -107,13 +107,11 @@
                         <MenuItem Header="Add Another Library" Click="AddDLL_Click"></MenuItem>
                     </MenuItem>
                 </MenuItem>
-                <MenuItem x:Name="Props" Header="Current Property">
-
-                </MenuItem>
+                <MenuItem x:Name="Props" Header="Current Property"/>
             </Menu>
         </Canvas>
-        <oxy:PlotView x:Name="CurrCategoryPlot" Model="{Binding VM_CurrCategoryPM}" Margin="36,28,938,323" BorderThickness="5" BorderBrush="#FFB9B2AD"/>
-        <oxy:PlotView x:Name="CurrCorrelatedCategoryPlot" Model="{Binding VM_CurrCorrelatedCategoryPM}" Margin="36,253,938,98" BorderThickness="5" BorderBrush="#FFB9B2AD"/>
-        <oxy:PlotView x:Name="CorrelatedAsFuncOfCurrent" Model="{Binding VM_CorrelatedAsFuncOfCurrent}" Margin="261,28,467,101" BorderThickness="5" BorderBrush="#FFB9B2AD"/>
+        <oxy:PlotView x:Name="CurrCategoryPlot" Model="{Binding CurrCategoryPM}" Margin="36,28,938,323" BorderThickness="5" BorderBrush="#FFB9B2AD"/>
+        <oxy:PlotView x:Name="CurrCorrelatedCategoryPlot" Model="{Binding CurrCorrelatedCategoryPM}" Margin="36,253,938,98" BorderThickness="5" BorderBrush="#FFB9B2AD"/>
+        <oxy:PlotView x:Name="CorrelatedAsFuncOfCurrent" Model="{Binding CorrelatedAsFuncOfCurrent}" Margin="261,28,467,101" BorderThickness="5" BorderBrush="#FFB9B2AD"/>
     </Grid>
 </Window>

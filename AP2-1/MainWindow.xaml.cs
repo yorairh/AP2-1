@@ -18,7 +18,11 @@ namespace AP2_1
     /// </summary>
     public partial class MainWindow : Window, IView
     {
-        IViewModel vm;
+        private IMainViewModel mainVM;
+        private IFlightDataViewModel flightDataVM;
+        private ITimeManagerViewModel timeManagerVM;
+        private IGraphViewModel graphVM;
+
         private string pathToAnomalyFile;
         private string pathToLearningFile;
         private string pathToXML;
@@ -71,40 +75,58 @@ namespace AP2_1
             SetRudder();
             SetThrottle();
             SetPluginsDir();
-            vm = new FlightSimulatorViewModel(new FlightSimulatorModel());
-            CurrCategoryPlot.DataContext = vm;
-            CurrCorrelatedCategoryPlot.DataContext = vm;
-            CorrelatedAsFuncOfCurrent.DataContext = vm;
-            AnomaliesTable.DataContext = vm;
-            File.Copy(PLUGINS_DIR + "/LinearRegression.dll", vm.GetLibrary(), true);
-            File.Copy(PLUGINS_DIR + "/LinearRegression.dll", "LinearRegression.dll", true);
-            File.Copy(PLUGINS_DIR + "/StringWrapper.dll", "StringWrapper.dll", true);
+
+            // vm = new FlightSimulatorViewModel(new FlightSimulatorModel());
+
+            // create vm's
+
+            MainModel mainModel = new MainModel();
+            GraphModel gModel = new GraphModel(mainModel);
+            graphVM = new GraphViewModel(gModel);
+            FlightDataModel fdModel = new FlightDataModel(mainModel);
+            flightDataVM = new FlightDataViewModel(fdModel);
+            TimeManagerModel tmModel = new TimeManagerModel(mainModel);
+            timeManagerVM = new TimeManagerViewModel(tmModel);
+            mainVM = new MainViewModel(mainModel);
+            mainModel.SetFlightDataModel(fdModel);
+            mainModel.SetGraphModel(gModel);
+            mainModel.SetTimeManagerModel(tmModel);
+
+            // data contexts
+            tbTime.DataContext = timeManagerVM;
+            sldrTime.DataContext = mainVM;
+            tbHeight.DataContext = flightDataVM;
+            tbAirSpeed.DataContext = flightDataVM;
+
+            CurrCategoryPlot.DataContext = gModel;
+            CurrCorrelatedCategoryPlot.DataContext = gModel;
+            CorrelatedAsFuncOfCurrent.DataContext = gModel;
+            AnomaliesTable.DataContext = gModel;
+
+            File.Copy(PLUGINS_DIR + "/LinearRegression.dll", LibraryManager.LIBRARY_PATH, true);
+            File.Copy(PLUGINS_DIR + "/LinearRegression.dll", LibraryManager.LINEAR_LIBRARY_PATH, true);
+            File.Copy(PLUGINS_DIR + "/StringWrapper.dll", StringWrapper.STRING_LIBRARY_PATH, true);
 
             CompositionTarget.Rendering += CompositionTarget_Rendering;
 
-            vm.notifyPropertyChanged += (object sender, EventArgs e) =>
+            timeManagerVM.notifyPropertyChanged += (object sender, EventArgs e) =>
             {
-                if (e as CSVAnomaliesFileUploadEventArgs != null)
-                {
-                    CSVAnomaliesFileUploadEventArgs args = e as CSVAnomaliesFileUploadEventArgs;
-                    if (args.Info == PropertyChangedEventArgs.InfoVal.FileUpdated)
-                    {
-                        sldrTime.Maximum = args.Length;
-                        gridControl.Visibility = Visibility.Visible;
-                    }
-                }
                 if (e as TimeChangedEventArgs != null)
                 {
                     TimeChangedEventArgs args = e as TimeChangedEventArgs;
                     if (args.Info == PropertyChangedEventArgs.InfoVal.TimeChanged)
                     {
-                        this.Dispatcher.BeginInvoke(DispatcherPriority.Normal, (ThreadStart)delegate ()
+                        this.Dispatcher.BeginInvoke(DispatcherPriority.Normal, (ThreadStart) delegate ()
                         {
                             sldrTime.Value = args.Seconds;
                             tbTime.Text = args.NewTime;
                         });
                     }
                 }
+            };
+
+            flightDataVM.notifyPropertyChanged += (object sender, EventArgs e) =>
+            {
                 if (e as InformationChangedEventArgs != null)
                 {
                     InformationChangedEventArgs args = e as InformationChangedEventArgs;
@@ -121,16 +143,19 @@ namespace AP2_1
                             Canvas.SetLeft(RudderTracker, leftRudder);
                             int topThrottle = (int)(Canvas.GetTop(ThrottleLayout) + (ThrottleLayout.Height - ThrottleTracker.Height) / 2 - (ThrottleLayout.Height - ThrottleTracker.Height) * (args.Throttle) / 2);
                             Canvas.SetTop(ThrottleTracker, topThrottle);
+
                             tbHeight.Text = args.Altimeter.ToString();
                             tbAirSpeed.Text = args.AirSpeed.ToString();
                             angleOfRoll.Angle = args.Roll;
                             angleOfPitch.Angle = args.Pitch;
                             angleOfYaw.Angle = args.Yaw;
-                            // vm?.UpdateGraph();
-                            // CurrCategoryPlot?.InvalidatePlot(true);
                         });
                     }
                 }
+            };
+
+            mainVM.notifyPropertyChanged += (object sender, EventArgs e) =>
+            {
                 if (e as XMLFileUploadEventArgs != null)
                 {
                     XMLFileUploadEventArgs args = e as XMLFileUploadEventArgs;
@@ -143,8 +168,17 @@ namespace AP2_1
                                 Header = c
                             };
                             item.Click += MenuItem_Click;
+                            // mainVM.CategoriesMenu.Add(item);
                             Props.Items.Add(item);
                         }
+                    }
+                }
+                if (e as CSVAnomaliesFileUploadEventArgs != null)
+                {
+                    CSVAnomaliesFileUploadEventArgs args = e as CSVAnomaliesFileUploadEventArgs;
+                    if (args.Info == PropertyChangedEventArgs.InfoVal.FileUpdated)
+                    {
+                        sldrTime.Maximum = args.Length;
                     }
                 }
                 // more....
@@ -156,7 +190,7 @@ namespace AP2_1
             var mi = sender as MenuItem;
             if (mi != null)
             {
-                vm.SetCurrentCategory(mi.Header as string);
+                mainVM.SetCurrentCategory(mi.Header as string);
                 var items = AnomaliesTable.ItemsSource;
                 AnomaliesTable.ItemsSource = null;
                 AnomaliesTable.ItemsSource = items;
@@ -165,7 +199,7 @@ namespace AP2_1
 
         private void CompositionTarget_Rendering(object sender, EventArgs e)
         {
-            vm?.UpdateGraph();
+            graphVM?.UpdateGraph();
             if (CurrCategoryPlot?.Model?.Series != null)
             {
                 CurrCategoryPlot.InvalidatePlot(true);
@@ -237,43 +271,41 @@ namespace AP2_1
         private void Upload_Click(object sender, RoutedEventArgs e)
         {
             // upload the file
-            vm.UploadFile(pathToAnomalyFile, pathToXML, pathToLearningFile);
-            // CollectionViewSource.GetDefaultView(AnomaliesTable.ItemsSource).Refresh();
-            // AnomaliesTable.UpdateLayout();
+            mainVM.UploadFile(pathToAnomalyFile, pathToXML, pathToLearningFile);
             
         }
 
         private void BtnPlay_Click(object sender, RoutedEventArgs e)
         {
-            vm.SetPause(false);
+            timeManagerVM.SetPause(false);
         }
 
         private void BtnPause_Click(object sender, RoutedEventArgs e)
         {
-            vm.SetPause(true);
+            timeManagerVM.SetPause(true);
         }
 
         private void BtnFastBackward_Click(object sender, RoutedEventArgs e)
         {
-            vm.Jump(-50);
+            timeManagerVM.Jump(-50);
         }
 
         private void BtnFastForward_Click(object sender, RoutedEventArgs e)
         {
-            vm.Jump(50);
+            timeManagerVM.Jump(50);
         }
 
 
         private void SldrTime_DragStarted(object sender, System.Windows.Controls.Primitives.DragStartedEventArgs e)
         {
-            vm.SetPause(true);
+            timeManagerVM.SetPause(true);
         }
 
         private void SldrTime_DragCompleted(object sender, System.Windows.Controls.Primitives.DragCompletedEventArgs e)
         {
             int val = (int)((Slider)sender).Value;
-            vm.SetTime(val);
-            vm.SetPause(false);
+            timeManagerVM.SetTime(val);
+            timeManagerVM.SetPause(false);
         }
 
         private void BtnSpeed_Click(object sender, RoutedEventArgs e)
@@ -284,11 +316,8 @@ namespace AP2_1
             }
             else
             {
-                if (vm != null)
-                {
-                    tbSpeed.Text = Math.Round(speed, 1, MidpointRounding.AwayFromZero).ToString();
-                    vm.SetSpeed(Math.Round(speed, 1, MidpointRounding.AwayFromZero));
-                }
+                tbSpeed.Text = Math.Round(speed, 1, MidpointRounding.AwayFromZero).ToString();
+                timeManagerVM.SetSpeed(Math.Round(speed, 1, MidpointRounding.AwayFromZero));
             }
         }
 
@@ -354,13 +383,13 @@ namespace AP2_1
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            vm.Exit();
+            mainVM.Exit();
         }
 
         private void propertyMenu_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             ComboBox cb = sender as ComboBox;
-            vm?.SetCurrentCategory((cb.SelectedItem as ComboBoxItem).Content.ToString());
+            mainVM?.SetCurrentCategory((cb.SelectedItem as ComboBoxItem).Content.ToString());
         }
 
         private void CSVLearningMenu_Click(object sender, RoutedEventArgs e)
@@ -413,13 +442,7 @@ namespace AP2_1
         private void DllChoosed_Click(object sender, RoutedEventArgs e)
         {
             MenuItem item = sender as MenuItem;
-            vm?.SetLibrary(item.Header as string);
-        }
-
-        private void AnomalyDetectionAlgo_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            ComboBox cb = sender as ComboBox;
-            vm?.SetLibrary((cb.SelectedItem as ComboBoxItem).Content.ToString());
+            LibraryManager.SetLibrary(item.Header as string);
         }
     }
 }

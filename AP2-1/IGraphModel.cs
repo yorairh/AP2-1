@@ -17,6 +17,7 @@ namespace AP2_1
         PlotModel CorrelatedAsFuncOfCurrent{get;set;}
         List<Anomaly> AnomaliesData{get;set;}
         void DetectAnomaliesAndSetResults(string pathCSVAnomalies);
+        void UpdateAxes();
 
         void UpdateGraph();
     }

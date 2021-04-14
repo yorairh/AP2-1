@@ -15,6 +15,17 @@ namespace AP2_1
         public TimeManagerViewModel(ITimeManagerModel model)
         {
             this.model = model;
+            model.notifyPropertyChanged += (object sender, EventArgs e) => {
+               
+                if (e as TimeChangedEventArgs != null)
+                {
+                    TimeChangedEventArgs args = e as TimeChangedEventArgs;
+                    if (args.Info == PropertyChangedEventArgs.InfoVal.TimeChanged)
+                    {
+                        notifyPropertyChanged(this, args);
+                    }
+                }
+            };
         }
 
         public void SetPause(bool pause)

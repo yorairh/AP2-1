@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Runtime.InteropServices;
 
 namespace AP2_1
 {
     class StringWrapper
     {
-        private const string STRING_LIBRARY_PATH = "StringWrapper.dll";
+        public const string STRING_LIBRARY_PATH = "StringWrapper.dll";
         [DllImport(STRING_LIBRARY_PATH, CallingConvention = CallingConvention.Cdecl)]
         public static extern IntPtr CreatestringWrapper();
         [DllImport(STRING_LIBRARY_PATH, CallingConvention = CallingConvention.Cdecl)]

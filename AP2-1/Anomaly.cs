@@ -14,6 +14,10 @@ namespace AP2_1
         {
             get; set;
         }
+        public string Time
+        {
+            get;set;
+        }
 
         public string GetFeature1()
         {
@@ -22,6 +26,7 @@ namespace AP2_1
         public Anomaly(int timeStep, string description)
         {
             this.TimeStep = timeStep;
+            Time = TimeManagerModel.TimeFormat(timeStep / 10);
             var f = description.Split(',');
             if (f.Length == 2)
             {
