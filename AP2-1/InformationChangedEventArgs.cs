@@ -144,18 +144,18 @@ namespace AP2_1
             }
         }
 
-        public InformationChangedEventArgs(InfoVal info, float[] stats) : base(info)
+        public InformationChangedEventArgs(InfoVal info, Dictionary<string, float> stats) : base(info)
         {
-            this.aileron = stats[0];
-            this.elevator = stats[1];
-            this.rudder = stats[2];
-            this.throttle = stats[3];
-            this.altimeter = stats[4];
-            this.airSpeed = stats[5];
-            this.orientation = stats[6];
-            this.roll = stats[7];
-            this.pitch = stats[8];
-            this.yaw = stats[9];
+            this.aileron = stats["aileron"];
+            this.elevator = stats["elevator"];
+            this.rudder = stats["rudder"];
+            this.throttle = stats["throttle"];
+            this.altimeter = stats["altitude-ft"];
+            this.airSpeed = stats["airspeed-kt"];
+            this.orientation = stats["heading-deg"];
+            this.roll = stats["roll-deg"];
+            this.pitch = stats["pitch-deg"];
+            this.yaw = stats["side-slip-deg"];
         }
     }
 }

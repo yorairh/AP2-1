@@ -20,14 +20,14 @@ namespace AP2_1
         public void UpdateData()
         {
             string[] props = { "aileron", "elevator", "rudder", "throttle", "altitude-ft", "airspeed-kt", "heading-deg", "roll-deg", "pitch-deg", "side-slip-deg" };
-            float[] info = new float[props.Length];
-            for (int i = 0; i < info.Length; ++i)
+            Dictionary<string, float> p = new Dictionary<string, float>();
+            for (int i = 0; i < props.Length; ++i)
             {
                 var temp = mainModel.GetValueByCategory(props[i]);
                 if (temp == null) return;
-                info[i] = temp.Value;
+                p.Add(props[i], temp.Value);
             }
-            notifyPropertyChanged(this, new InformationChangedEventArgs(PropertyChangedEventArgs.InfoVal.InfoChanged, info));
+            notifyPropertyChanged(this, new InformationChangedEventArgs(PropertyChangedEventArgs.InfoVal.InfoChanged, p));
         }
     }
 }

@@ -8,7 +8,7 @@
         mc:Ignorable="d"
         Title="Flight Simulator" Height="600" Width="1200" Closing="Window_Closing">
     <Grid Background="#FFD9DCCE">
-        <Button x:Name="btnUpload" Content="Upload" HorizontalAlignment="Left" Margin="953,422,0,0" VerticalAlignment="Top" Width="200" Click="Upload_Click" Visibility="Hidden" Height="50"/>
+        <Button x:Name="btnUpload" Content="Upload" HorizontalAlignment="Left" Margin="919,379,0,0" VerticalAlignment="Top" Width="84" Click="Upload_Click" Visibility="Hidden" Height="50"/>
         <Grid HorizontalAlignment="Left" Height="69" Margin="10,480,0,0" VerticalAlignment="Top" Width="1174" Name="gridControl" Visibility="Visible">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1*" />
@@ -55,12 +55,12 @@
             <TextBlock x:Name="tbHeight" Text="" Canvas.Left="1015" TextWrapping="Wrap" Height="23" Canvas.Top="246" FontWeight="Bold" Foreground="#FFB9B2AD" FontSize="16"/>
             <TextBlock Canvas.Left="947" TextWrapping="Wrap" Text="Speed:" Canvas.Top="269" Height="23" Width="auto" FontWeight="Bold" Foreground="#FFB9B2AD" FontSize="16"/>
             <TextBlock x:Name="tbAirSpeed" Text="" Canvas.Left="1015" TextWrapping="Wrap" Height="23" Canvas.Top="269" FontWeight="Bold" Foreground="#FFB9B2AD" FontSize="16"/>
-            <TextBlock Canvas.Left="947" TextWrapping="Wrap" Text="ROLL" Canvas.Top="314" Foreground="#FFB9B2AD" Height="21" Width="auto" FontSize="16" RenderTransformOrigin="0.5,-0.121" FontWeight="Bold"/>
-            <TextBlock Canvas.Left="1030" TextWrapping="Wrap" Text="PITCH" Canvas.Top="314" Foreground="#FFB9B2AD" Height="21" Width="auto" FontSize="16" RenderTransformOrigin="0.5,-0.121" FontWeight="Bold"/>
-            <TextBlock Canvas.Left="1129" TextWrapping="Wrap" Text="YAW" Canvas.Top="314" Foreground="#FFB9B2AD" Height="21" Width="auto" FontSize="16" RenderTransformOrigin="0.5,-0.121" FontWeight="Bold"/>
+            <TextBlock Canvas.Left="1035" TextWrapping="Wrap" Text="ROLL" Canvas.Top="292" Foreground="#FFB9B2AD" Height="21" Width="auto" FontSize="16" RenderTransformOrigin="0.5,-0.121" FontWeight="Bold"/>
+            <TextBlock Canvas.Left="1118" TextWrapping="Wrap" Text="PITCH" Canvas.Top="292" Foreground="#FFB9B2AD" Height="21" Width="auto" FontSize="16" RenderTransformOrigin="0.5,-0.121" FontWeight="Bold"/>
+            <TextBlock Canvas.Left="1129" TextWrapping="Wrap" Text="YAW" Canvas.Top="392" Foreground="#FFB9B2AD" Height="21" Width="auto" FontSize="16" RenderTransformOrigin="0.5,-0.121" FontWeight="Bold"/>
 
-            <Ellipse Fill="#FFB9B2AD" Height="75" Canvas.Left="925" Stroke="Black" Canvas.Top="335" Width="75"/>
-            <Border Background="Black" BorderBrush="Black" CornerRadius="120 120 0 0" BorderThickness="1" Height="30" Canvas.Left="962" Canvas.Top="341" Width="3" RenderTransformOrigin="0.5 1">
+            <Ellipse Fill="#FFB9B2AD" Height="75" Canvas.Left="1013" Stroke="Black" Canvas.Top="313" Width="75"/>
+            <Border Background="Black" BorderBrush="Black" CornerRadius="120 120 0 0" BorderThickness="1" Height="30" Canvas.Left="1050" Canvas.Top="319" Width="3" RenderTransformOrigin="0.5 1">
                 <Border.RenderTransform>
                     <TransformGroup>
                         <ScaleTransform/>
@@ -70,8 +70,8 @@
                     </TransformGroup>
                 </Border.RenderTransform>
             </Border>
-            <Ellipse Fill="#FFB9B2AD" Height="75" Canvas.Left="1015" Stroke="Black" Canvas.Top="335" Width="75"/>
-            <Border Background="Black" BorderBrush="Black" CornerRadius="120 120 0 0" BorderThickness="1" Height="30" Canvas.Left="1052" Canvas.Top="341" Width="3" RenderTransformOrigin="0.5 1">
+            <Ellipse Fill="#FFB9B2AD" Height="75" Canvas.Left="1103" Stroke="Black" Canvas.Top="313" Width="75"/>
+            <Border Background="Black" BorderBrush="Black" CornerRadius="120 120 0 0" BorderThickness="1" Height="30" Canvas.Left="1140" Canvas.Top="319" Width="3" RenderTransformOrigin="0.5 1">
                 <Border.RenderTransform>
                     <TransformGroup>
                         <ScaleTransform/>
@@ -81,8 +81,19 @@
                     </TransformGroup>
                 </Border.RenderTransform>
             </Border>
-            <Ellipse Fill="#FFB9B2AD" Height="75" Canvas.Left="1103" Stroke="Black" Canvas.Top="335" Width="75"/>
-            <Border Background="Black" RenderTransformOrigin="0.5 1" BorderBrush="Black" CornerRadius="120 120 0 0" BorderThickness="1" Height="30" Canvas.Left="1142" Canvas.Top="341" Width="3">
+            <Ellipse Fill="#FFB9B2AD" Height="75" Canvas.Left="1013" Stroke="Black" Canvas.Top="413" Width="75"/>
+            <Border Background="Black" RenderTransformOrigin="0.5 1" BorderBrush="Black" CornerRadius="120 120 0 0" BorderThickness="1" Height="30" Canvas.Left="1050" Canvas.Top="419" Width="3">
+                <Border.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform/>
+                        <SkewTransform/>
+                        <RotateTransform x:Name="orientation"/>
+                        <TranslateTransform/>
+                    </TransformGroup>
+                </Border.RenderTransform>
+            </Border>
+            <Ellipse Fill="#FFB9B2AD" Height="75" Canvas.Left="1103" Stroke="Black" Canvas.Top="413" Width="75"/>
+            <Border Background="Black" RenderTransformOrigin="0.5 1" BorderBrush="Black" CornerRadius="120 120 0 0" BorderThickness="1" Height="30" Canvas.Left="1140" Canvas.Top="419" Width="3">
                 <Border.RenderTransform>
                     <TransformGroup>
                         <ScaleTransform/>
@@ -109,6 +120,7 @@
                 </MenuItem>
                 <MenuItem x:Name="Props" Header="Current Property"/>
             </Menu>
+            <TextBlock Canvas.Left="1013" TextWrapping="Wrap" Text="HEADING" Canvas.Top="392" Foreground="#FFB9B2AD" Height="21" Width="auto" FontSize="16" RenderTransformOrigin="0.5,-0.121" FontWeight="Bold"/>
         </Canvas>
         <oxy:PlotView x:Name="CurrCategoryPlot" Model="{Binding CurrCategoryPM}" Margin="36,28,938,323" BorderThickness="5" BorderBrush="#FFB9B2AD"/>
         <oxy:PlotView x:Name="CurrCorrelatedCategoryPlot" Model="{Binding CurrCorrelatedCategoryPM}" Margin="36,253,938,98" BorderThickness="5" BorderBrush="#FFB9B2AD"/>

@@ -149,6 +149,7 @@ namespace AP2_1
                             angleOfRoll.Angle = args.Roll;
                             angleOfPitch.Angle = args.Pitch;
                             angleOfYaw.Angle = args.Yaw;
+                            orientation.Angle = args.Orientation;
                         });
                     }
                 }
