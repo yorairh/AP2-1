@@ -26,8 +26,7 @@ Our project is built using MVVM Architecture: (view, viewmodel, model)
 ***
 ## Third Part - Installations required
 * The path to the csv files must conatin only ASCII characters. (Or it will not work)
-* Download [Visual Studio](https://visualstudio.microsoft.com/) (Latest release) and 
-[FlightGear](https://www.flightgear.org/)
+* Download [Visual Studio](https://visualstudio.microsoft.com/) (Latest release) and [FlightGear](https://www.flightgear.org/)
 * NuGet Packages: OxyPlot.Wpf, OxyPlot.Core
 * Framework: .NET framework 4.7.2
 ***
@@ -41,11 +40,11 @@ Our project is built using MVVM Architecture: (view, viewmodel, model)
 4. Click on Start (with a green arrow) and start running the project!
 ***
 ## Fifth Part
-link to our GitHub repository - https://github.com/yorairh/AP2-1.git
-link to our UML diagram - https://github.com/yorairh/AP2-1/blob/master/AP21.pdf
+link to our [GitHub repository](https://github.com/yorairh/AP2-1.git)
+link to our [UML diagram](https://github.com/yorairh/AP2-1/blob/master/AP21.pdf)
 ***
 ## Sixth Part - Video
-link to the explaination video - https://youtu.be/NE104wh8ttw
+link to our [explaination video](https://youtu.be/NE104wh8ttw)
 ***
 ## DLL explanation
 In order to create a new anomaly detector algorythm you will need to create a new DLL.
