@@ -146,7 +146,10 @@ namespace AP2_1
 
             try
             {
-                FGClient = new TcpClient("localhost", 5400);
+                if (FGClient == null || !FGClient.Connected)
+                {
+                    FGClient = new TcpClient("localhost", 5400);
+                }
             } catch(Exception e)
             {
                 MessageBox.Show("Connection to Flight Gear Failed. Try To Upload Again.");
@@ -179,7 +182,7 @@ namespace AP2_1
                 if (!arg.pause)
                 {
                     // send fileData[index]
-                    var bytes = Encoding.ASCII.GetBytes(fileData[Index]);
+                    var bytes = Encoding.ASCII.GetBytes(fileData[Index] + Environment.NewLine);
                     FGClient.GetStream().Write(bytes, 0, bytes.Length);
 
                     ++Index;
@@ -188,6 +191,7 @@ namespace AP2_1
                     Thread.Sleep((int)(100 / arg.SendingSpeed));
                 }
             }
+            FGClient.Close();
         }
 
         public float? GetValueByCategory(string category)
@@ -232,6 +236,10 @@ namespace AP2_1
             if (sendFileThread != null && sendFileThread.IsAlive)
             {
                 sendFileThread.Abort();
+            }
+            if (FGClient != null && !FGClient.Connected)
+            {
+                FGClient.Close();
             }
         }
 

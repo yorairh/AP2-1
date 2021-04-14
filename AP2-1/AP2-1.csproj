@@ -112,10 +112,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="CSVAnomaliesFileUploadEventArgs.cs" />
-    <Compile Include="IModel.cs" />
     <Compile Include="INotifyPropertyChanged.cs" />
-    <Compile Include="IView.cs" />
-    <Compile Include="IViewModel.cs" />
     <Compile Include="PropertyChangedEventArgs.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>

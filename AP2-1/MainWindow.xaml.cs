@@ -16,7 +16,7 @@ namespace AP2_1
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window, IView
+    public partial class MainWindow : Window
     {
         private IMainViewModel mainVM;
         private IFlightDataViewModel flightDataVM;
@@ -183,6 +183,10 @@ namespace AP2_1
                 }
                 // more....
             };
+            MessageBox.Show("Welcome to our Flight Tracker\nTo start open flightgear (Make sure you already put your xml inside" +
+                " the protocols folder in the flightgear folder) now click on fly\nNow in the window that will open after you press ok upload all the three files - click on settings" +
+                " and then choose the files to upload (one by one to their category) then click on upload and you are good to go!", "Welcome!");
+
         }
 
         private void MenuItem_Click(object sender, RoutedEventArgs e)
