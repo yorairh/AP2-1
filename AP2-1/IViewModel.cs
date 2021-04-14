@@ -12,19 +12,19 @@ namespace AP2_1
     interface IViewModel : INotifyPropertyChanged
     {
 
-        PlotModel VM_CurrCategoryPM
+        /*PlotModel CurrCategoryPM
         {
             get;
             set;
         }
 
-        PlotModel VM_CurrCorrelatedCategoryPM
+        PlotModel CurrCorrelatedCategoryPM
         {
             get;
             set;
         }
 
-        PlotModel VM_CorrelatedAsFuncOfCurrent
+        PlotModel CorrelatedAsFuncOfCurrent
         {
             get;
             set;
@@ -34,16 +34,18 @@ namespace AP2_1
             get; 
             set;
         }
+        void UpdateGraph();*/
 
-        void UploadFile(string pathCSVAnomalies, string pathXML, string pathCSVLearn);
-        void SetPause(bool pause);
-        void Jump(int len);
+        /*void Jump(int len);
         void SetTime(int time);
         void SetSpeed(double speed);
-        void SetCurrentCategory(string category);
-        void SetLibrary(string path);
+        void SetPause(bool pause);*/
+        
+        /*void SetLibrary(string path);
         string GetLibrary();
-        void UpdateGraph();
-        void Exit();
+        void SetCurrentCategory(string category);
+        void UploadFile(string pathCSVAnomalies, string pathXML, string pathCSVLearn);
+        void Exit();*/
+        
     }
 }

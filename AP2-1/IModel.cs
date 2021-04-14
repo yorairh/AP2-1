@@ -9,18 +9,20 @@ namespace AP2_1
     interface IModel : INotifyPropertyChanged
     {
 
-        void SetPause(bool pause);
 
         void UploadFile(string pathCSVAnomalies, string pathXML);
-        void Jump(int val);
-        void SetTime(int time);
-        void SetSpeed(double speed);
         void SetCurrentCategory(string category);
-        List<float> GetRelevantDataByFeature(string feature);
         string GetCurrentCategory();
+        List<float> GetRelevantDataByFeature(string feature);
+        void Exit();
         float GetCategoryMinimum(string category);
         float GetCategoryMaximum(string category);
         int GetCurrentTimeStep();
-        void Exit();
+
+
+        void SetPause(bool pause);
+        void SetTime(int time);
+        void Jump(int val);
+        void SetSpeed(double speed);
     }
 }

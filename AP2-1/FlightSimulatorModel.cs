@@ -16,7 +16,7 @@ namespace AP2_1
 {
     class FlightSimulatorModel : IModel
     {
-        private Thread sendFileThread;
+        /*private Thread sendFileThread;
         private string[] fileData;
         private List<string> categories;
         public List<int> minValues;
@@ -27,9 +27,9 @@ namespace AP2_1
         private object indexLock;
         private string currentCategory;
 
-        public event propertyChanged notifyPropertyChanged;
+        public event propertyChanged notifyPropertyChanged;*/
 
-        public FlightSimulatorModel()
+        /*public FlightSimulatorModel()
         {
             indexLock = new object();
             
@@ -182,9 +182,27 @@ namespace AP2_1
             return maxValues.ElementAt(categories.IndexOf(category));
         }
 
-        public void SetPause(bool pause)
+        public void SetCurrentCategory(string category)
         {
-            this.pause = pause;
+            this.currentCategory = (category == "Choose property" ? null : category);
+        }
+
+        public int GetCurrentTimeStep()
+        {
+            int res;
+            lock(indexLock)
+            {
+                res = index;
+            }
+            return res;
+        }
+
+        public void Exit()
+        {
+            if (sendFileThread != null && sendFileThread.IsAlive)
+            {
+                sendFileThread.Abort();
+            }
         }
 
         private static string TimeFormat(int seconds)
@@ -192,6 +210,10 @@ namespace AP2_1
             int h = seconds / 3600, m = (seconds - 3600 * h) / 60, s = seconds - 3600 * h - m * 60;
             DateTime dt = new DateTime(1, 1, 1, h, m, s); // the date doesn't matter
             return dt.ToString("HH:mm:ss");
+        }*/
+        public void SetPause(bool pause)
+        {
+            this.pause = pause;
         }
 
         public void Jump(int val)
@@ -219,27 +241,5 @@ namespace AP2_1
             sendingSpeed = speed;
         }
 
-        public void SetCurrentCategory(string category)
-        {
-            this.currentCategory = (category == "Choose property" ? null : category);
-        }
-
-        public int GetCurrentTimeStep()
-        {
-            int res;
-            lock(indexLock)
-            {
-                res = index;
-            }
-            return res;
-        }
-
-        public void Exit()
-        {
-            if (sendFileThread != null && sendFileThread.IsAlive)
-            {
-                sendFileThread.Abort();
-            }
-        }
     }
 }

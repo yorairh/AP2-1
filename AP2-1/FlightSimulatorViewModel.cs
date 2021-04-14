@@ -19,47 +19,11 @@ namespace AP2_1
         private IModel model;
         private string learnFile;
         Dictionary<string, List<float>> learnedData;
+
         private FunctionSeries regLine;
-        private int fileLen;
-
-        private PlotModel currCategoryPM;
-        public PlotModel VM_CurrCategoryPM
-        {
-            get
-            {
-                return currCategoryPM;
-            }
-            set
-            {
-                currCategoryPM = value;
-            }
-        }
-
-        private PlotModel currCorrelatedCategoryPM;
-        public PlotModel VM_CurrCorrelatedCategoryPM
-        {
-            get
-            {
-                return currCorrelatedCategoryPM;
-            }
-            set
-            {
-                currCorrelatedCategoryPM = value;
-            }
-        }
-
-        private PlotModel correlatedAsFuncOfCurrent;
-        public PlotModel VM_CorrelatedAsFuncOfCurrent
-        {
-            get
-            {
-                return correlatedAsFuncOfCurrent;
-            }
-            set
-            {
-                correlatedAsFuncOfCurrent = value;
-            }
-        }
+        public PlotModel VM_CurrCategoryPM { get; set; }
+        public PlotModel VM_CurrCorrelatedCategoryPM { get; set; }
+        public PlotModel VM_CorrelatedAsFuncOfCurrent { get; set; }
 
         public event propertyChanged notifyPropertyChanged;
 
@@ -69,8 +33,8 @@ namespace AP2_1
             learnedData = new Dictionary<string, List<float>>();
             results = IntPtr.Zero;
             this.model = model;
-            this.currCategoryPM = new PlotModel();
-            currCategoryPM.Axes.Add(new LinearAxis
+            /*this.CurrCategoryPM = new PlotModel();
+            CurrCategoryPM.Axes.Add(new LinearAxis
             {
                 Title = "Time",
                 Minimum = -5,
@@ -78,7 +42,7 @@ namespace AP2_1
                 Position = AxisPosition.Bottom,
                 IsZoomEnabled = false
             });
-            currCategoryPM.Axes.Add(new LinearAxis
+            CurrCategoryPM.Axes.Add(new LinearAxis
             {
                 Title = "",
                 Minimum = 0,
@@ -87,8 +51,8 @@ namespace AP2_1
                 IsZoomEnabled = false
             });
 
-            this.VM_CurrCorrelatedCategoryPM = new PlotModel();
-            VM_CurrCorrelatedCategoryPM.Axes.Add(new LinearAxis
+            this.CurrCorrelatedCategoryPM = new PlotModel();
+            CurrCorrelatedCategoryPM.Axes.Add(new LinearAxis
             {
                 Title = "Time",
                 Minimum = -5,
@@ -96,7 +60,7 @@ namespace AP2_1
                 Position = AxisPosition.Bottom,
                 IsZoomEnabled = false
             });
-            VM_CurrCorrelatedCategoryPM.Axes.Add(new LinearAxis
+            CurrCorrelatedCategoryPM.Axes.Add(new LinearAxis
             {
                 Title = "",
                 Minimum = 0,
@@ -105,8 +69,8 @@ namespace AP2_1
                 IsZoomEnabled = false
             });
 
-            this.VM_CorrelatedAsFuncOfCurrent = new PlotModel();
-            VM_CorrelatedAsFuncOfCurrent.Axes.Add(new LinearAxis
+            this.CorrelatedAsFuncOfCurrent = new PlotModel();
+            CorrelatedAsFuncOfCurrent.Axes.Add(new LinearAxis
             {
                 Title = "",
                 Minimum = 0,
@@ -114,14 +78,14 @@ namespace AP2_1
                 Position = AxisPosition.Bottom,
                 IsZoomEnabled = false
             });
-            VM_CorrelatedAsFuncOfCurrent.Axes.Add(new LinearAxis
+            CorrelatedAsFuncOfCurrent.Axes.Add(new LinearAxis
             {
                 Title = "",
                 Minimum = 0,
                 Maximum = 0,
                 Position = AxisPosition.Left,
                 IsZoomEnabled = false
-            });
+            });*/
 
             model.notifyPropertyChanged += (object sender, EventArgs e) => {
                 if (e as CSVAnomaliesFileUploadEventArgs != null)
@@ -130,7 +94,6 @@ namespace AP2_1
                     if (args.Info == PropertyChangedEventArgs.InfoVal.FileUpdated)
                     {
                         notifyPropertyChanged(this, args);
-                        fileLen = args.Length;
                     }
                 }
                 if (e as TimeChangedEventArgs != null)
@@ -166,7 +129,7 @@ namespace AP2_1
         /*
          Wrapper and DLL shit from here
          */
-        private const string LIBRARY_PATH = "AnomaliesLibrary.dll";
+        /*private const string LIBRARY_PATH = "AnomaliesLibrary.dll";
         [DllImport(LIBRARY_PATH, CallingConvention = CallingConvention.Cdecl)]
         public static extern IntPtr detectAnomalis(IntPtr trainFile, IntPtr testFile);
         [DllImport(LIBRARY_PATH, CallingConvention = CallingConvention.Cdecl)]
@@ -209,6 +172,7 @@ namespace AP2_1
             }
             return str;
         }
+
         public static IntPtr CreateStringWrapperFromString(string str)
         {
             IntPtr s = CreatestringWrapper();
@@ -217,7 +181,7 @@ namespace AP2_1
                 addChar(s, c);
             }
             return s;
-        }
+        }*/
 
         private IntPtr results;
 
@@ -319,20 +283,8 @@ namespace AP2_1
             });
         }
 
-        public void UploadFile(string pathCSVAnomalies, string pathXML, string pathCSVLearn)
-        {
-            if (results != IntPtr.Zero)
-            {
-                deleteResults(results);
-                results = IntPtr.Zero;
-            }
-            // learn and detect anomalies
-            learnFile = pathCSVLearn;
-            detectAnomaliesAndSetResults(pathCSVAnomalies);
-            model.UploadFile(pathCSVAnomalies, pathXML);
-        }
 
-        public void SetPause(bool pause)
+        /*public void SetPause(bool pause)
         {
             model.SetPause(pause);
         }
@@ -350,34 +302,34 @@ namespace AP2_1
         public void SetSpeed(double speed)
         {
             model.SetSpeed(speed);
-        }
+        }*/
 
         public void SetCurrentCategory(string category)
         {
             model.SetCurrentCategory(category);
-            if (currCategoryPM.Axes.Count > 1)
+            if (VM_CurrCategoryPM.Axes.Count > 1)
             {
-                var yAxis = currCategoryPM.Axes.ElementAt(1);
+                var yAxis = VM_CurrCategoryPM.Axes.ElementAt(1);
                 yAxis.Minimum = model.GetCategoryMinimum(category) - 5;
                 yAxis.Maximum = model.GetCategoryMaximum(category) + 5;
                 yAxis.Title = category;
             }
-            if (currCorrelatedCategoryPM.Axes.Count > 1)
+            if (VM_CurrCorrelatedCategoryPM.Axes.Count > 1)
             {
-                var yAxis = currCorrelatedCategoryPM.Axes.ElementAt(1);
+                var yAxis = VM_CurrCorrelatedCategoryPM.Axes.ElementAt(1);
                 string corrFeat = GetCorrelatedFeature(category);
                 yAxis.Minimum = model.GetCategoryMinimum(corrFeat) - 5;
                 yAxis.Maximum = model.GetCategoryMaximum(corrFeat) + 5;
                 yAxis.Title = corrFeat;
             }
-            if (correlatedAsFuncOfCurrent.Axes.Count > 1)
+            if (VM_CorrelatedAsFuncOfCurrent.Axes.Count > 1)
             {
-                var xAxis = correlatedAsFuncOfCurrent.Axes.ElementAt(0);
+                var xAxis = VM_CorrelatedAsFuncOfCurrent.Axes.ElementAt(0);
                 xAxis.Minimum = model.GetCategoryMinimum(category) - 5;
                 xAxis.Maximum = model.GetCategoryMaximum(category) + 5;
                 xAxis.Title = category;
 
-                var yAxis = correlatedAsFuncOfCurrent.Axes.ElementAt(1);
+                var yAxis = VM_CorrelatedAsFuncOfCurrent.Axes.ElementAt(1);
                 string corrFeat = GetCorrelatedFeature(category);
                 yAxis.Minimum = model.GetCategoryMinimum(corrFeat) - 5;
                 yAxis.Maximum = model.GetCategoryMaximum(corrFeat) + 5;
@@ -402,10 +354,22 @@ namespace AP2_1
             }
         }
 
-        public void SetLibrary(string path)
+        /*public void SetLibrary(string path)
         {
             // libraryPath = path;
             File.Copy(path, LIBRARY_PATH);
+        }
+        public void UploadFile(string pathCSVAnomalies, string pathXML, string pathCSVLearn)
+        {
+            if (results != IntPtr.Zero)
+            {
+                deleteResults(results);
+                results = IntPtr.Zero;
+            }
+            // learn and detect anomalies
+            learnFile = pathCSVLearn;
+            detectAnomaliesAndSetResults(pathCSVAnomalies);
+            model.UploadFile(pathCSVAnomalies, pathXML);
         }
 
         public string GetLibrary()
@@ -416,7 +380,7 @@ namespace AP2_1
         public void Exit()
         {
             model.Exit();
-        }
+        }*/
 
         
     }

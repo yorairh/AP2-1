@@ -82,8 +82,22 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Anomaly.cs" />
+    <Compile Include="GraphViewModel.cs" />
+    <Compile Include="IGraphModel.cs" />
+    <Compile Include="IGraphViewModel.cs" />
+    <Compile Include="IMainModel.cs" />
+    <Compile Include="IMainViewModel.cs" />
     <Compile Include="InformationChangedEventArgs.cs" />
+    <Compile Include="GraphModel.cs" />
+    <Compile Include="ITimeManagerModel.cs" />
+    <Compile Include="ITimeManagerViewModel.cs" />
+    <Compile Include="LibraryManger.cs" />
+    <Compile Include="MainModel.cs" />
+    <Compile Include="MainViewModel.cs" />
+    <Compile Include="StringWrapper.cs" />
     <Compile Include="TimeChangedEventArgs.cs" />
+    <Compile Include="TimeManagerModel.cs" />
+    <Compile Include="TimeManagerViewModel.cs" />
     <Compile Include="XMLFileUploadEventArgs.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
