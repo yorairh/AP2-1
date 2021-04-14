@@ -8,7 +8,7 @@
         mc:Ignorable="d"
         Title="Flight Simulator" Height="600" Width="1200" Closing="Window_Closing">
     <Grid Background="#FFD9DCCE">
-        <Button x:Name="btnUpload" Content="Upload" HorizontalAlignment="Left" Margin="876,420,0,0" VerticalAlignment="Top" Width="200" Click="Upload_Click" Visibility="Visible" Height="50"/>
+        <Button x:Name="btnUpload" Content="Upload" HorizontalAlignment="Left" Margin="953,422,0,0" VerticalAlignment="Top" Width="200" Click="Upload_Click" Visibility="Visible" Height="50"/>
         <Grid HorizontalAlignment="Left" Height="69" Margin="10,490,0,0" VerticalAlignment="Top" Width="1174" Name="gridControl" Visibility="Visible">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1*" />
@@ -35,8 +35,8 @@
             <TextBlock x:Name="tbTime" Grid.Column="6" HorizontalAlignment="Center" Margin="0,0,0,0" TextWrapping="Wrap" Text="00:00:00" VerticalAlignment="Center" Width="120" Height="25" FontSize="20"/>
             <Slider Name="sldrTime" HorizontalAlignment="Stretch" Margin="0,15,0,0" Grid.Row="1" Grid.ColumnSpan="9" VerticalAlignment="Top" Minimum="0" Thumb.DragStarted="SldrTime_DragStarted" Thumb.DragCompleted="SldrTime_DragCompleted" Foreground="#FFE41C1C" Background="#FFD9DCCE" />
         </Grid>
-        <Canvas Name="LayoutInfo" Visibility="Visible">
-            <Ellipse x:Name ="Joystick" Height="180" Canvas.Left="977" Canvas.Top="18" Width="180" Stroke="Black">
+        <Canvas Name="LayoutInfo" Visibility="Visible" Margin="-4,0,3.6,0.4">
+            <Ellipse x:Name ="Joystick" Height="200" Canvas.Left="978" Canvas.Top="23" Width="200" Stroke="Black">
                 <Ellipse.Fill>
                     <VisualBrush>
                         <VisualBrush.Visual>
@@ -45,19 +45,21 @@
                     </VisualBrush>
                 </Ellipse.Fill>
             </Ellipse>
-            <Ellipse x:Name ="JoystickHandle" Fill="#FFD9DCCE"/>
-            <Rectangle x:Name="RudderLayout" Height="18" Canvas.Left="977" Stroke="#FFB9B2AD" Canvas.Top="206" Width="180" Fill="#FFD9DCCE"/>
+            <Ellipse x:Name ="JoystickHandle" Fill="Gray"/>
+            <Rectangle x:Name="RudderLayout" Height="18" Canvas.Left="978" Stroke="#FFB9B2AD" Canvas.Top="228" Width="200" Fill="#FFD9DCCE"/>
             <Rectangle x:Name="RudderTracker" Fill="#FFB9B2AD"/>
-            <Rectangle x:Name="ThrottleLayout" Height="179" Canvas.Left="953" Stroke="#FFB9B2AD" Canvas.Top="18" Width="17" Fill="#FFD9DCCE"/>
+            <Rectangle x:Name="ThrottleLayout" Height="200" Canvas.Left="947" Stroke="#FFB9B2AD" Canvas.Top="23" Width="17" Fill="#FFD9DCCE"/>
             <Rectangle x:Name="ThrottleTracker" Fill="#FFB9B2AD"/>
-            <TextBlock Canvas.Left="953" TextWrapping="Wrap" Text="Height:" Canvas.Top="246" Height="23" Width="auto" FontWeight="Bold" Foreground="#FFB9B2AD" FontSize="16"/>
-            <TextBlock x:Name="tbHeight" Canvas.Left="1021" TextWrapping="Wrap" Text="" Height="23" Canvas.Top="246" FontWeight="Bold" Foreground="#FFB9B2AD"/>
-            <TextBlock Canvas.Left="953" TextWrapping="Wrap" Text="ROLL" Canvas.Top="284" Foreground="#FFB9B2AD" Height="21" Width="auto" FontSize="16" RenderTransformOrigin="0.5,-0.121" FontWeight="Bold"/>
-            <TextBlock Canvas.Left="1036" TextWrapping="Wrap" Text="PITCH" Canvas.Top="284" Foreground="#FFB9B2AD" Height="21" Width="auto" FontSize="16" RenderTransformOrigin="0.5,-0.121" FontWeight="Bold"/>
-            <TextBlock Canvas.Left="1135" TextWrapping="Wrap" Text="YAW" Canvas.Top="284" Foreground="#FFB9B2AD" Height="21" Width="auto" FontSize="16" RenderTransformOrigin="0.5,-0.121" FontWeight="Bold"/>
+            <TextBlock Canvas.Left="947" TextWrapping="Wrap" Text="Height:" Canvas.Top="246" Height="24" Width="auto" FontWeight="Bold" Foreground="#FFB9B2AD" FontSize="16"/>
+            <TextBlock x:Name="tbHeight" Canvas.Left="1015" TextWrapping="Wrap" Text="" Height="23" Canvas.Top="246" FontWeight="Bold" Foreground="#FFB9B2AD" FontSize="16"/>
+            <TextBlock Canvas.Left="947" TextWrapping="Wrap" Text="Speed:" Canvas.Top="269" Height="23" Width="auto" FontWeight="Bold" Foreground="#FFB9B2AD" FontSize="16"/>
+            <TextBlock x:Name="tbAirSpeed" Canvas.Left="1015" TextWrapping="Wrap" Text="" Height="23" Canvas.Top="269" FontWeight="Bold" Foreground="#FFB9B2AD" FontSize="16"/>
+            <TextBlock Canvas.Left="947" TextWrapping="Wrap" Text="ROLL" Canvas.Top="314" Foreground="#FFB9B2AD" Height="21" Width="auto" FontSize="16" RenderTransformOrigin="0.5,-0.121" FontWeight="Bold"/>
+            <TextBlock Canvas.Left="1030" TextWrapping="Wrap" Text="PITCH" Canvas.Top="314" Foreground="#FFB9B2AD" Height="21" Width="auto" FontSize="16" RenderTransformOrigin="0.5,-0.121" FontWeight="Bold"/>
+            <TextBlock Canvas.Left="1129" TextWrapping="Wrap" Text="YAW" Canvas.Top="314" Foreground="#FFB9B2AD" Height="21" Width="auto" FontSize="16" RenderTransformOrigin="0.5,-0.121" FontWeight="Bold"/>
 
-            <Ellipse Fill="#FFB9B2AD" Height="75" Canvas.Left="931" Stroke="Black" Canvas.Top="305" Width="75"/>
-            <Border Background="Black" BorderBrush="Black" CornerRadius="120 120 0 0" BorderThickness="1" Height="30" Canvas.Left="968" Canvas.Top="311" Width="3" RenderTransformOrigin="0.5 1">
+            <Ellipse Fill="#FFB9B2AD" Height="75" Canvas.Left="925" Stroke="Black" Canvas.Top="335" Width="75"/>
+            <Border Background="Black" BorderBrush="Black" CornerRadius="120 120 0 0" BorderThickness="1" Height="30" Canvas.Left="962" Canvas.Top="341" Width="3" RenderTransformOrigin="0.5 1">
                 <Border.RenderTransform>
                     <TransformGroup>
                         <ScaleTransform/>
@@ -67,8 +69,8 @@
                     </TransformGroup>
                 </Border.RenderTransform>
             </Border>
-            <Ellipse Fill="#FFB9B2AD" Height="75" Canvas.Left="1021" Stroke="Black" Canvas.Top="305" Width="75"/>
-            <Border Background="Black" BorderBrush="Black" CornerRadius="120 120 0 0" BorderThickness="1" Height="30" Canvas.Left="1058" Canvas.Top="311" Width="2" RenderTransformOrigin="0.5 1">
+            <Ellipse Fill="#FFB9B2AD" Height="75" Canvas.Left="1015" Stroke="Black" Canvas.Top="335" Width="75"/>
+            <Border Background="Black" BorderBrush="Black" CornerRadius="120 120 0 0" BorderThickness="1" Height="30" Canvas.Left="1052" Canvas.Top="341" Width="3" RenderTransformOrigin="0.5 1">
                 <Border.RenderTransform>
                     <TransformGroup>
                         <ScaleTransform/>
@@ -78,8 +80,8 @@
                     </TransformGroup>
                 </Border.RenderTransform>
             </Border>
-            <Ellipse Fill="#FFB9B2AD" Height="75" Canvas.Left="1109" Stroke="Black" Canvas.Top="305" Width="75"/>
-            <Border Background="Black" RenderTransformOrigin="0.5 1" BorderBrush="Black" CornerRadius="120 120 0 0" BorderThickness="1" Height="30" Canvas.Left="1148" Canvas.Top="311" Width="3">
+            <Ellipse Fill="#FFB9B2AD" Height="75" Canvas.Left="1103" Stroke="Black" Canvas.Top="335" Width="75"/>
+            <Border Background="Black" RenderTransformOrigin="0.5 1" BorderBrush="Black" CornerRadius="120 120 0 0" BorderThickness="1" Height="30" Canvas.Left="1142" Canvas.Top="341" Width="3">
                 <Border.RenderTransform>
                     <TransformGroup>
                         <ScaleTransform/>
@@ -111,6 +113,6 @@
         </Canvas>
         <oxy:PlotView x:Name="CurrCategoryPlot" Model="{Binding VM_CurrCategoryPM}" Margin="36,28,938,323" BorderThickness="5" BorderBrush="#FFB9B2AD"/>
         <oxy:PlotView x:Name="CurrCorrelatedCategoryPlot" Model="{Binding VM_CurrCorrelatedCategoryPM}" Margin="36,253,938,98" BorderThickness="5" BorderBrush="#FFB9B2AD"/>
-        <oxy:PlotView x:Name="CorrelatedAsFuncOfCurrent" Model="{Binding VM_CorrelatedAsFuncOfCurrent}" Margin="261,28,337,101" BorderThickness="5" BorderBrush="#FFB9B2AD"/>
+        <oxy:PlotView x:Name="CorrelatedAsFuncOfCurrent" Model="{Binding VM_CorrelatedAsFuncOfCurrent}" Margin="261,28,282.6,101.4" BorderThickness="5" BorderBrush="#FFB9B2AD"/>
     </Grid>
 </Window>

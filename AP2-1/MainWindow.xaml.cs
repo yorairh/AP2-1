@@ -120,6 +120,7 @@ namespace AP2_1
                             int topThrottle = (int)(Canvas.GetTop(ThrottleLayout) + (ThrottleLayout.Height - ThrottleTracker.Height) / 2 - (ThrottleLayout.Height - ThrottleTracker.Height) * (args.Throttle) / 2);
                             Canvas.SetTop(ThrottleTracker, topThrottle);
                             tbHeight.Text = args.Altimeter.ToString();
+                            tbAirSpeed.Text = args.AirSpeed.ToString();
                             angleOfRoll.Angle = args.Roll;
                             angleOfPitch.Angle = args.Pitch;
                             angleOfYaw.Angle = args.Yaw;
