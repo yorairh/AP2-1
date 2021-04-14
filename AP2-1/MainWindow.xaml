@@ -9,7 +9,7 @@
         Title="Flight Simulator" Height="600" Width="1200" Closing="Window_Closing">
     <Grid Background="#FFD9DCCE">
         <Button x:Name="btnUpload" Content="Upload" HorizontalAlignment="Left" Margin="953,422,0,0" VerticalAlignment="Top" Width="200" Click="Upload_Click" Visibility="Visible" Height="50"/>
-        <Grid HorizontalAlignment="Left" Height="69" Margin="10,490,0,0" VerticalAlignment="Top" Width="1174" Name="gridControl" Visibility="Visible">
+        <Grid HorizontalAlignment="Left" Height="69" Margin="10,480,0,0" VerticalAlignment="Top" Width="1174" Name="gridControl" Visibility="Visible">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1*" />
                 <ColumnDefinition Width="1*" />
@@ -35,6 +35,7 @@
             <TextBlock x:Name="tbTime" Grid.Column="6" HorizontalAlignment="Center" Margin="0,0,0,0" TextWrapping="Wrap" Text="00:00:00" VerticalAlignment="Center" Width="120" Height="25" FontSize="20"/>
             <Slider Name="sldrTime" HorizontalAlignment="Stretch" Margin="0,15,0,0" Grid.Row="1" Grid.ColumnSpan="9" VerticalAlignment="Top" Minimum="0" Thumb.DragStarted="SldrTime_DragStarted" Thumb.DragCompleted="SldrTime_DragCompleted" Foreground="#FFE41C1C" Background="#FFD9DCCE" />
         </Grid>
+        <DataGrid x:Name="AnomaliesTable" ItemsSource="{Binding Path=VM_AnomaliesData}" CanUserResizeColumns="False" HorizontalAlignment="Left" Height="440" Margin="764,28,0,0" VerticalAlignment="Top" Width="Auto" AutoGenerateColumns="True"/>
         <Canvas Name="LayoutInfo" Visibility="Visible" Margin="-4,0,3.6,0.4">
             <Ellipse x:Name ="Joystick" Height="200" Canvas.Left="978" Canvas.Top="23" Width="200" Stroke="Black">
                 <Ellipse.Fill>
@@ -113,6 +114,6 @@
         </Canvas>
         <oxy:PlotView x:Name="CurrCategoryPlot" Model="{Binding VM_CurrCategoryPM}" Margin="36,28,938,323" BorderThickness="5" BorderBrush="#FFB9B2AD"/>
         <oxy:PlotView x:Name="CurrCorrelatedCategoryPlot" Model="{Binding VM_CurrCorrelatedCategoryPM}" Margin="36,253,938,98" BorderThickness="5" BorderBrush="#FFB9B2AD"/>
-        <oxy:PlotView x:Name="CorrelatedAsFuncOfCurrent" Model="{Binding VM_CorrelatedAsFuncOfCurrent}" Margin="261,28,282.6,101.4" BorderThickness="5" BorderBrush="#FFB9B2AD"/>
+        <oxy:PlotView x:Name="CorrelatedAsFuncOfCurrent" Model="{Binding VM_CorrelatedAsFuncOfCurrent}" Margin="261,28,467,101" BorderThickness="5" BorderBrush="#FFB9B2AD"/>
     </Grid>
 </Window>

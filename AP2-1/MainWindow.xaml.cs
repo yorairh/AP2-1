@@ -9,6 +9,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using OxyPlot.Series;
 using System.IO;
+using System.Windows.Data;
 
 namespace AP2_1
 {
@@ -74,6 +75,7 @@ namespace AP2_1
             CurrCategoryPlot.DataContext = vm;
             CurrCorrelatedCategoryPlot.DataContext = vm;
             CorrelatedAsFuncOfCurrent.DataContext = vm;
+            AnomaliesTable.DataContext = vm;
             File.Copy(PLUGINS_DIR + "/LinearRegression.dll", vm.GetLibrary(), true);
             File.Copy(PLUGINS_DIR + "/LinearRegression.dll", "LinearRegression.dll", true);
             File.Copy(PLUGINS_DIR + "/StringWrapper.dll", "StringWrapper.dll", true);
@@ -155,6 +157,9 @@ namespace AP2_1
             if (mi != null)
             {
                 vm.SetCurrentCategory(mi.Header as string);
+                var items = AnomaliesTable.ItemsSource;
+                AnomaliesTable.ItemsSource = null;
+                AnomaliesTable.ItemsSource = items;
             }
         }
 
@@ -233,6 +238,9 @@ namespace AP2_1
         {
             // upload the file
             vm.UploadFile(pathToAnomalyFile, pathToXML, pathToLearningFile);
+            // CollectionViewSource.GetDefaultView(AnomaliesTable.ItemsSource).Refresh();
+            // AnomaliesTable.UpdateLayout();
+            
         }
 
         private void BtnPlay_Click(object sender, RoutedEventArgs e)

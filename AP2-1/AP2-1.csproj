@@ -81,6 +81,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Anomaly.cs" />
     <Compile Include="InformationChangedEventArgs.cs" />
     <Compile Include="TimeChangedEventArgs.cs" />
     <Compile Include="XMLFileUploadEventArgs.cs" />

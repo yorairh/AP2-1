@@ -3,12 +3,14 @@ using OxyPlot.Axes;
 using OxyPlot.Series;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media;
 
 namespace AP2_1
 {
@@ -18,6 +20,7 @@ namespace AP2_1
         private string learnFile;
         Dictionary<string, List<float>> learnedData;
         private FunctionSeries regLine;
+        private int fileLen;
 
         private PlotModel currCategoryPM;
         public PlotModel VM_CurrCategoryPM
@@ -58,11 +61,11 @@ namespace AP2_1
             }
         }
 
-
         public event propertyChanged notifyPropertyChanged;
 
         public FlightSimulatorViewModel(IModel model)
         {
+            VM_AnomaliesData = new List<Anomaly>();
             learnedData = new Dictionary<string, List<float>>();
             results = IntPtr.Zero;
             this.model = model;
@@ -127,6 +130,7 @@ namespace AP2_1
                     if (args.Info == PropertyChangedEventArgs.InfoVal.FileUpdated)
                     {
                         notifyPropertyChanged(this, args);
+                        fileLen = args.Length;
                     }
                 }
                 if (e as TimeChangedEventArgs != null)
@@ -176,6 +180,12 @@ namespace AP2_1
         public static extern float getSlope(IntPtr r, IntPtr feature);
         [DllImport(LINEAR_LIBRARY_PATH, CallingConvention = CallingConvention.Cdecl)]
         public static extern float getYIntercept(IntPtr r, IntPtr feature);
+        [DllImport(LINEAR_LIBRARY_PATH, CallingConvention = CallingConvention.Cdecl)]
+        public static extern IntPtr getAnomalyDescription(IntPtr r, int index);
+        [DllImport(LINEAR_LIBRARY_PATH, CallingConvention = CallingConvention.Cdecl)]
+        public static extern int getAnomalyTimeStep(IntPtr r, int index);
+        [DllImport(LINEAR_LIBRARY_PATH, CallingConvention = CallingConvention.Cdecl)]
+        public static extern int anomaliesLen(IntPtr r);
         private const string STRING_LIBRARY_PATH = "StringWrapper.dll";
         [DllImport(STRING_LIBRARY_PATH, CallingConvention = CallingConvention.Cdecl)]
         public static extern IntPtr CreatestringWrapper();
@@ -187,6 +197,8 @@ namespace AP2_1
         public static extern void addChar(IntPtr s, char c);
         [DllImport(STRING_LIBRARY_PATH, CallingConvention = CallingConvention.Cdecl)]
         public static extern void removeStr(IntPtr s);
+        
+
         public static string GetStr(IntPtr s)
         {
             int l = len(s);
@@ -213,6 +225,7 @@ namespace AP2_1
         {
             IntPtr train = CreateStringWrapperFromString(learnFile), test = CreateStringWrapperFromString(pathCSVAnomalies);
             results = detectAnomalis(train, test);
+            SetAnomalies(results);
             removeStr(train);
             removeStr(test);
         }
@@ -228,6 +241,28 @@ namespace AP2_1
             return corrStr;
         }
 
+        
+        public List<Anomaly> VM_AnomaliesData
+        {
+            get;
+            set;
+        }
+        private List<Anomaly> anomalies;
+
+        private void SetAnomalies(IntPtr results)
+        {
+            VM_AnomaliesData.Clear();
+            anomalies = new List<Anomaly>();
+            int len = anomaliesLen(results);
+            for (int i = 0; i < len; ++i)
+            {
+                IntPtr desc = getAnomalyDescription(results, i);
+                int timeStep = getAnomalyTimeStep(results, i);
+                anomalies.Add(new Anomaly(timeStep, GetStr(desc)));
+                // VM_AnomaliesData.Add(new Anomaly(timeStep, GetStr(desc)));
+                removeStr(desc);
+            }
+        }
 
         /*
          end of this
@@ -286,6 +321,11 @@ namespace AP2_1
 
         public void UploadFile(string pathCSVAnomalies, string pathXML, string pathCSVLearn)
         {
+            if (results != IntPtr.Zero)
+            {
+                deleteResults(results);
+                results = IntPtr.Zero;
+            }
             // learn and detect anomalies
             learnFile = pathCSVLearn;
             detectAnomaliesAndSetResults(pathCSVAnomalies);
@@ -351,7 +391,15 @@ namespace AP2_1
                 // Line reg = LinearRegressionCalculator.CalculateLineRegression(learnedData[category], learnedData[GetCorrelatedFeature(category)]);
                 // regLine = new FunctionSeries((double x) => reg.Slope * x + reg.YIntercept, xAxis.Minimum, xAxis.Maximum, 0.0001);
             }
-            // currCorrelatedCategoryPM
+
+            VM_AnomaliesData.Clear();
+            foreach (Anomaly a in anomalies)
+            {
+                if (a.GetFeature1() == category)
+                {
+                    VM_AnomaliesData.Add(a);
+                }
+            }
         }
 
         public void SetLibrary(string path)
