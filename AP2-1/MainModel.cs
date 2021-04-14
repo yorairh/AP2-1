@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Windows;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,6 +17,7 @@ namespace AP2_1
 {
     class MainModel : IMainModel
     {
+        private TcpClient FGClient;
         private Thread sendFileThread;
         private string[] fileData;
         private List<string> categories;
@@ -142,6 +144,15 @@ namespace AP2_1
             notifyPropertyChanged(this, new CSVAnomaliesFileUploadEventArgs(PropertyChangedEventArgs.InfoVal.FileUpdated, fileData.Length));
             notifyPropertyChanged(this, new XMLFileUploadEventArgs(PropertyChangedEventArgs.InfoVal.FileUpdated, categories));
 
+            try
+            {
+                FGClient = new TcpClient("localhost", 5400);
+            } catch(Exception e)
+            {
+                MessageBox.Show("Connection to Flight Gear Failed. Try To Upload Again.");
+                return;
+            }
+
             Index = 0;
             sendingSpeed = 1;
             StartThread();
@@ -168,6 +179,8 @@ namespace AP2_1
                 if (!arg.pause)
                 {
                     // send fileData[index]
+                    var bytes = Encoding.ASCII.GetBytes(fileData[Index]);
+                    FGClient.GetStream().Write(bytes, 0, bytes.Length);
 
                     ++Index;
                     flightDataModel.UpdateData();
