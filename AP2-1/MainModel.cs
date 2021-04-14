@@ -144,17 +144,7 @@ namespace AP2_1
             notifyPropertyChanged(this, new CSVAnomaliesFileUploadEventArgs(PropertyChangedEventArgs.InfoVal.FileUpdated, fileData.Length));
             notifyPropertyChanged(this, new XMLFileUploadEventArgs(PropertyChangedEventArgs.InfoVal.FileUpdated, categories));
 
-            try
-            {
-                if (FGClient == null || !FGClient.Connected)
-                {
-                    FGClient = new TcpClient("localhost", 5400);
-                }
-            } catch(Exception e)
-            {
-                MessageBox.Show("Connection to Flight Gear Failed. Try To Upload Again.");
-                return;
-            }
+            
 
             Index = 0;
             sendingSpeed = 1;
@@ -163,6 +153,18 @@ namespace AP2_1
 
         private void StartThread()
         {
+            try
+            {
+                if (FGClient == null || !FGClient.Connected)
+                {
+                    FGClient = new TcpClient("localhost", 5400);
+                }
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show("Connection to Flight Gear Failed. Try To Upload Again.");
+                return;
+            }
             // create the thread uploading the file lines
             pause = false;
             
